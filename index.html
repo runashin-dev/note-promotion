@@ -1,305 +1,982 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>노트성형외과 글로벌 입점 제안서</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>병원 성과 리포트</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#F7F5F2;font-family:'Noto Sans KR',sans-serif;color:#1a1a1a;padding:2rem 1rem 4rem}
-  .page{max-width:880px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
-  .hero{background:linear-gradient(135deg,#FF6B35 0%,#FF8C5A 100%);padding:2rem 2.2rem 1.8rem;position:relative;overflow:hidden}
-  .hero::after{content:'';position:absolute;right:-40px;top:-40px;width:220px;height:220px;background:rgba(255,255,255,0.08);border-radius:50%}
-  .hero-badge{display:inline-block;background:rgba(255,255,255,0.22);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:12px;letter-spacing:0.5px}
-  .hero-title{font-size:25px;font-weight:700;color:#fff;line-height:1.35;margin-bottom:6px;position:relative;z-index:1}
-  .hero-sub{font-size:13px;color:rgba(255,255,255,0.85);position:relative;z-index:1}
-  .tabs{display:flex;border-bottom:1px solid #F0EDE8;background:#fff}
-  .tab{flex:1;padding:16px 10px;font-size:14px;font-weight:700;color:#aaa;background:none;border:none;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;transition:all .15s}
-  .tab:hover{color:#FF6B35}
-  .tab.active{color:#FF6B35;border-bottom-color:#FF6B35}
-  .panel{display:none;padding:1.9rem 2.2rem}
-  .panel.active{display:block}
-  .section-title{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:8px}
-  .section-title::before{content:'';width:3px;height:18px;background:#FF6B35;border-radius:2px}
-  .lead{font-size:13.5px;color:#666;line-height:1.7;margin-bottom:18px}
-  .lead b{color:#CC4A1A}
-  .rec-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
-  .rec-card{border:1.5px solid #FFD4BF;border-radius:14px;padding:18px;background:#FFF8F5;text-align:center}
-  .rec-branch{font-size:18px;font-weight:700;margin-bottom:4px}
-  .rec-tagline{font-size:11.5px;color:#999;margin-bottom:14px}
-  .rec-countries{display:flex;flex-direction:column;gap:8px}
-  .rec-c{background:#fff;border:1px solid #F0E0D5;border-radius:9px;padding:9px;font-size:14px;font-weight:700;color:#CC4A1A}
-  .rec-c span{font-size:18px;margin-right:5px}
-  .note{background:#EBF3FC;border-radius:10px;padding:14px 16px;font-size:12.5px;color:#2C6CB0;line-height:1.7}
-  .chart-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-  .ccard{border:1px solid #F0EDE8;border-top:3px solid var(--accent);border-radius:12px;padding:14px 16px}
-  .chd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
-  .ctitle{font-size:18px;font-weight:700;line-height:1}
-  .csub{font-size:9px;color:#aaa;letter-spacing:2px;margin-top:6px}
-  .clegend{font-size:11px;min-width:155px}
-  .clegend .row{display:grid;grid-template-columns:15px 30px 42px 46px;align-items:center;gap:3px;margin-bottom:3px}
-  .clegend .mk{width:13px;height:3px;border-radius:2px}
-  .clegend .mk.bar{height:9px;opacity:.45}
-  .clegend .nm{font-weight:700;color:#777;font-size:10px}
-  .clegend .v{text-align:right;font-weight:700;font-size:10px}
-  .up{color:#3b9c5a}.down{color:#d0494b}
-  .cmonths{display:flex;justify-content:flex-end;gap:22px;font-size:9px;color:#bbb;margin-top:1px}
-  .chart-wrap{position:relative;height:185px;margin-top:4px}
-  .insight{background:#FFF8F5;border:1px solid #FFD4BF;border-radius:10px;padding:13px 16px;font-size:12.5px;color:#7a4a30;line-height:1.7;margin-top:14px}
-  .insight b{color:#CC4A1A}
-  .ev-card{border:1px solid #F0EDE8;border-top:3px solid var(--accent);border-radius:12px;padding:16px 18px;margin-bottom:14px}
-  .ev-hd{display:flex;align-items:baseline;gap:8px;margin-bottom:1px}
-  .ev-hd .flag{font-size:20px}
-  .ev-hd .nm{font-size:18px;font-weight:700}
-  .ev-sub{font-size:11.5px;color:#999;margin:0 0 10px}
-  .cat-row{display:grid;grid-template-columns:66px 1fr;gap:10px;align-items:start;padding:7px 0;border-top:1px solid #F4F1EC}
-  .cat-lbl{font-size:11.5px;font-weight:700;padding-top:3px;color:var(--accent);line-height:1.3}
-  .chips{display:flex;flex-wrap:wrap;gap:5px}
-  .chip{font-size:11.5px;padding:3px 8px;border-radius:7px;white-space:nowrap}
-  .chip .rk{font-size:9.5px;opacity:.5;margin-right:2px}
-  .setup-note{background:#FFF3EC;border-left:3px solid #FF6B35;border-radius:0 10px 10px 0;padding:13px 16px;font-size:12.5px;color:#8a4a25;line-height:1.7;margin-bottom:16px}
-  .setup-note b{color:#CC4A1A}
-  .subhead{font-size:16px;font-weight:700;margin:24px 0 8px;display:flex;align-items:center;gap:8px}
-  .subhead::before{content:'';width:3px;height:18px;background:#FF6B35;border-radius:2px}
-  .benefit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .bcard{border:1px solid #FFD4BF;border-radius:12px;padding:15px 16px;background:#fff}
-  .btitle{font-size:13.5px;font-weight:700;color:#1a1a1a;margin-bottom:7px;display:flex;align-items:center;gap:6px}
-  .bicon{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;background:#FF6B35;color:#fff;border-radius:50%;font-size:12px;font-weight:700;flex-shrink:0}
-  .bdesc{font-size:12px;color:#666;line-height:1.65}
-  .bdesc b{color:#CC4A1A}
-  .bwarn{margin-top:9px;background:#FFF3F3;border-radius:8px;padding:9px 11px;font-size:11px;color:#A32D2D;line-height:1.6}
-  .bwarn b{color:#A32D2D}
-  .cond-box{background:#FFF8F5;border:1px solid #FFD4BF;border-radius:10px;padding:14px 16px;margin-bottom:14px}
-  .cond-title{font-size:13px;font-weight:700;color:#CC4A1A;margin-bottom:6px}
-  .cond-desc{font-size:12.5px;color:#555;line-height:1.7}
-  .cond-desc b{color:#CC4A1A}
-  .step-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
-  .cstep{display:flex;gap:11px;align-items:flex-start}
-  .cstep-n{flex-shrink:0;width:22px;height:22px;background:#FF6B35;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
-  .cstep-t{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:3px}
-  .ctag{font-size:10.5px;font-weight:700;color:#FF6B35;background:#FFF3EC;padding:2px 7px;border-radius:10px;margin-left:5px}
-  .cstep-d{font-size:12px;color:#666;line-height:1.65}
-  .cstep-d b{color:#1a1a1a}
-  .cex{display:inline-block;margin-top:5px;background:#F7F5F2;border-radius:7px;padding:6px 10px;font-size:11px;color:#888}
-  .warn-box{background:#FFF0F0;border:1.5px solid #E24B4A;border-radius:12px;padding:14px 16px}
-  .warn-head{font-size:13px;font-weight:700;color:#A32D2D;margin-bottom:8px}
-  .warn-ul{margin:0;padding-left:16px}
-  .warn-ul li{font-size:11.5px;color:#7a2020;line-height:1.7;margin-bottom:4px}
-  .footer{padding:14px 20px;text-align:center;font-size:10.5px;color:#bbb;border-top:1px solid #F0EDE8}
-  .cta-btn{display:block;text-align:center;background:#FF6B35;color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;padding:15px;border-radius:12px;margin-top:18px;box-shadow:0 4px 14px rgba(255,107,53,.32);transition:background .15s}
-  .cta-btn:hover{background:#e85a28}
-  .mkt-block{margin-bottom:30px;padding-bottom:26px;border-bottom:1px dashed #E8E2DA}
-  .mkt-block:last-child{border-bottom:none;margin-bottom:0}
-  .mkt-head{font-size:19px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:12px}
-  .mkt-head .flag{font-size:22px}
-  .mkt-sub2{font-size:11.5px;font-weight:500;color:#999;margin-left:4px}
-  .mkt-block .ccard,.mkt-block .donut-box,.mkt-block .ev-card{margin-top:14px}
-  .mkt-block .ev-card{margin-bottom:0}
-  .donut-box{display:flex;align-items:center;gap:24px;border:1px solid #F0EDE8;border-radius:12px;padding:18px 20px;margin-bottom:6px}
-  .donut-chart{position:relative;width:185px;height:185px;flex-shrink:0}
-  .donut-legend{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px 18px}
-  .dl-row{display:flex;align-items:center;gap:7px;font-size:12px}
-  .dl-dot{width:11px;height:11px;border-radius:3px;flex-shrink:0}
-  .dl-nm{font-weight:700;color:#444}
-  .dl-v{margin-left:auto;font-weight:700;color:#888;font-size:11.5px}
-  @media(max-width:760px){.rec-grid,.chart-grid{grid-template-columns:1fr}.donut-box{flex-direction:column}.donut-legend{grid-template-columns:1fr;width:100%}}
-</style>
-</head>
-<body>
-<div class="page">
-  <div class="hero">
-    <span class="hero-badge">GLOBAL ENTRY PROPOSAL</span>
-    <div class="hero-title">노트성형외과 글로벌 입점 제안서</div>
-    <div class="hero-sub">중국 시장 진입 제안 · 시장 성장 현황 · 인기 이벤트 세팅 가이드</div>
-  </div>
-  <div class="tabs">
-    <button class="tab active" data-t="1">STEP 1 · 입점 제안</button>
-    <button class="tab" data-t="2">STEP 2 · 중국 시장 현황</button>
-    <button class="tab" data-t="3">STEP 3 · 타 시장 현황</button>
-  </div>
-
-  <div class="panel active" id="p1">
-    <div class="section-title">추천 입점 국가</div>
-    <p class="lead">노트성형외과의 위치·고객 특성을 고려해, 아래와 같이 <b>타깃 국가</b>를 제안드립니다.</p>
-    <div class="rec-grid" style="grid-template-columns:1fr;max-width:340px;margin:0 auto 20px">
-      <div class="rec-card"><div class="rec-branch">노트성형외과</div><div class="rec-countries"><div class="rec-c"><span>🇨🇳</span>중국</div></div></div>
-    </div>
-    <div class="note">제안드린 <b style="color:#1a5fa5">중국</b> 시장은 강남언니 플랫폼 내에서 시술·수술 수요가 빠르게 늘고 있는 국가입니다. STEP 2에서 실제 성장 지표와 인기 이벤트를 확인하실 수 있습니다.</div>
-
-    <div class="subhead" style="margin-top:24px">입점 시 제공 혜택</div>
-    <div class="benefit-grid">
-      <div class="bcard">
-        <div class="btitle"><span class="bicon">①</span> 복붙 이벤트 제작 무료</div>
-        <div class="bdesc">국내 이벤트 이미지를 해당 국가 언어로 번역해 동일 이미지로 제작해드립니다 (제안 국가당 최대 10개).</div>
-        <div class="bwarn">※ <b>강남언니 제작 희망 시 6/11까지</b> <a href="https://tally.so/r/3q1EEO" target="_blank" rel="noopener" style="color:#A32D2D;font-weight:700;text-decoration:underline">제작 신청 링크</a>로 요청해 주세요. 노트성형외과 자체 제작 시에는 STEP 2의 인기 이벤트를 참고해 제작해 주시면 됩니다. 어느 경우든 <b>이벤트 등록은 6월 내 필수 완료</b>되어야 합니다.</div>
-      </div>
-      <div class="bcard">
-        <div class="btitle"><span class="bicon">②</span> CPV 환급 프로모션</div>
-        <div class="bdesc"><b>신규 이벤트 7개 이상 등록</b> 후 3개월 유지 시, CPV 과금 <b>상위 3개 이벤트의 CPV 30%를 환급</b>해드립니다.</div>
-      </div>
-    </div>
-    <div class="subhead" style="margin-top:24px">CPV 환급 프로모션 상세 조건</div>
-    <div class="cond-box">
-      <div class="cond-title">환급 조건 요약</div>
-      <div class="cond-desc"><b>신규 이벤트 7개 이상 등록</b> 후, <b>3개월간 7개 이벤트 유지 조건 충족 시</b> → 신규 등록 이벤트 중 <b>CPV 과금 상위 3개</b>에서 발생한 CPV의 <b>30% 환급</b></div>
-    </div>
-    <div class="step-list">
-      <div class="cstep"><span class="cstep-n">1</span><div><div class="cstep-t">강남언니 제작 요청 <span class="ctag">~6/11</span> · 이벤트 등록 <span class="ctag">6월 내</span></div><div class="cstep-d">강남언니 제작을 원하실 경우 <b>6/11까지</b> <a href="https://tally.so/r/3q1EEO" target="_blank" rel="noopener" style="color:#CC4A1A;font-weight:700;text-decoration:underline">제작 신청 링크</a>로 요청해 주셔야 합니다. 글로벌 서비스 계약 후 <b>신규 이벤트 7개 이상은 6월 내(승인 기준) 모두 등록 완료</b>되어야 합니다.</div></div></div>
-      <div class="cstep"><span class="cstep-n">2</span><div><div class="cstep-t">환급 기산일 확정</div><div class="cstep-d">신규 등록 7개가 <b>모두 승인 완료된 날짜</b>부터 환급 기간이 카운트됩니다. (월 단위 환급)<br><span class="cex">예시 — 3개 6/15, 4개 6/27 승인 → 완성일 6/27 → 6/27~7/26 1개월분부터 환급</span></div></div></div>
-      <div class="cstep"><span class="cstep-n">3</span><div><div class="cstep-t">신규 7개 이벤트 — 3개월 유지 필수</div><div class="cstep-d"><b>신규 등록된 이벤트(최소 7개 이상 등록)는 3개월간 반드시 유지</b>해야 합니다. 1개라도 비활성화·삭제 시 해당 시점부터 환급이 중단됩니다.</div></div></div>
-      <div class="cstep"><span class="cstep-n">4</span><div><div class="cstep-t">기존 이벤트도 동일하게 3개월 유지</div><div class="cstep-d">프로모션 참여 전 라이브 중인 이벤트도 <b>3개월간 OFF 불가</b>. 기존 이벤트 비활성화 시에도 혜택 환수 대상입니다.</div></div></div>
-    </div>
-    <div class="warn-box">
-      <div class="warn-head">⚠ 반드시 확인하세요 — 혜택 환수 조건</div>
-      <ul class="warn-ul">
-        <li>제작 이벤트 미등록 또는 글로벌 서비스 계약 미완료 시, 환급 혜택이 전부 소급 취소됩니다.</li>
-        <li>신규 7개 이벤트 중 1개라도 3개월 내 비활성화·삭제 시, 해당 시점부터 환급 중단 및 기지급 환급액 환수될 수 있습니다.</li>
-        <li>기존 등록 이벤트를 3개월 내 비활성화·삭제하는 경우에도 동일하게 혜택 환수 대상입니다.</li>
-        <li>본 프로모션은 한정 혜택으로, 조건 위반 시 사전 고지 없이 종료될 수 있으며 일정·조건은 변경될 수 있습니다.</li>
-      </ul>
-    </div>
-    <a class="cta-btn" href="https://tally.so/r/3q1EEO" target="_blank" rel="noopener">📝 강남언니 이벤트 제작 신청하기 (~6/11)</a>
-  </div>
-
-  <div class="panel" id="p2">
-    <div class="section-title">중국 시장 MAU · DB 성장 현황</div>
-    <p class="lead">중국 시장의 최근 8개월 <b>MAU(월간 활성 이용자)</b>와 <b>DB(시술·수술 건수)</b> 추이입니다.</p>
-    <div class="chart-grid" id="chartGrid"></div>
-    <div class="insight" id="cnInsight"><b>핵심 요약</b> — 중국 시장은 최근 8개월간 DB(상담신청)가 <b>+292.1%</b> 급증했고, MAU도 <b>+50.7%</b> 성장했습니다. 특히 <b>'26년 2월 이후</b> 가파른 우상향 구간에 진입한 시장으로, 지금 입점하시면 성장하는 트래픽을 초기에 선점하실 수 있습니다.</div>
-    <div class="subhead">중국 시장 카테고리 구성비</div>
-    <p class="lead">시술 상담신청 기준 카테고리별 비중입니다. <b>피부·리프팅·보톡스</b> 3개 카테고리가 전체의 약 <b>80%</b>를 차지합니다.</p>
-    <div class="donut-box">
-      <div class="donut-chart"><canvas id="catDonut" role="img" aria-label="중국 카테고리 구성비"></canvas></div>
-      <div class="donut-legend" id="catLegend"></div>
-    </div>
-    <div class="subhead">중국 인기 시술 이벤트</div>
-    <div class="setup-note">아래는 중국에서 <b>DB(건수)가 많은 순</b>으로 정리한 인기 시술 이벤트입니다. <b>이 순서를 참고해 이벤트를 세팅</b>하시면, 중국 시장 수요에 맞춰 효율적으로 노출을 확보하실 수 있습니다.</div>
-    <div id="eventGrid"></div>
-  </div>
-
-  <div class="panel" id="p3">
-    <div class="section-title">타 시장 현황 (참고용)</div>
-    <p class="lead">대만·일본·영미·태국 시장의 동일 지표입니다. MAU·DB 추이는 <b>상대지수</b>, 카테고리 구성비와 인기 이벤트는 <b>시술 기준</b>입니다. 중국 외 시장 확장을 검토하실 때 참고하세요.</p>
-    <div id="step3"></div>
-  </div>
-
-  <div class="footer">© 2026 강남언니 — 본 제안서는 내부 전용 자료입니다. 무단 배포를 금합니다.</div>
-</div>
-
+*{margin:0;padding:0;box-sizing:border-box}body{background:#f5f6f8;color:#1a1d26;font-family:'Noto Sans KR',sans-serif;line-height:1.5}
+.W{max-width:1140px;margin:0 auto;padding:24px 20px 60px}
+.home{min-height:80vh;display:flex;flex-direction:column;align-items:center;padding-top:60px;text-align:center}
+.home h1{font-size:26px;font-weight:900;margin-bottom:4px}.home .desc{color:#6b7280;font-size:13px;margin-bottom:28px;max-width:500px;line-height:1.7}
+.saved-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;width:100%;max-width:700px;margin-bottom:28px}
+.saved-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px;cursor:pointer;text-align:left;transition:.2s;position:relative}.saved-card:hover{border-color:#6366f1}
+.saved-card .sc-name{font-size:15px;font-weight:800;margin-bottom:4px}.saved-card .sc-del{position:absolute;top:10px;right:12px;font-size:14px;color:#d1d5db;cursor:pointer;padding:4px}.saved-card .sc-del:hover{color:#ef4444}
+.or-divider{display:flex;align-items:center;gap:12px;width:100%;max-width:500px;margin:8px 0 20px;color:#9ca3af;font-size:11px}.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:#e5e7eb}
+.ugrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:600px;margin-bottom:20px}
+.ubox{background:#fff;border:2px dashed #d1d5db;border-radius:14px;padding:22px 14px;cursor:pointer;text-align:center;transition:.2s}.ubox:hover{border-color:#6366f1}.ubox.ok{border-color:#059669;border-style:solid;background:#f0fdf4}
+.ubox input{display:none}.ubox .ic{font-size:24px;margin-bottom:4px}.ubox .ut{font-size:12px;font-weight:700}.ubox .ud{font-size:9px;color:#9ca3af}.ubox .uf{font-size:9px;color:#059669;margin-top:3px;word-break:break-all}
+.hinp{background:#fff;border:1px solid #e5e7eb;color:#111827;padding:10px 16px;border-radius:10px;font-size:14px;font-family:'Noto Sans KR';text-align:center;width:260px;margin-bottom:16px;outline:none}
+.gbtn{padding:12px 36px;border-radius:10px;border:none;background:#6366f1;color:#fff;font-size:14px;font-weight:700;font-family:'Noto Sans KR';cursor:pointer}.gbtn:disabled{opacity:.35;cursor:not-allowed}
+.bbtn{position:fixed;top:16px;left:16px;padding:7px 14px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#6b7280;font-size:11px;cursor:pointer;font-family:'Noto Sans KR';z-index:100}
+.status{padding:8px 16px;border-radius:8px;font-size:11px;margin-bottom:12px;display:none}.status.ok{display:block;background:#ecfdf5;color:#059669;border:1px solid #a7f3d0}.status.err{display:block;background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.hdr{background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:14px;border:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.hdr h1{font-size:24px;font-weight:900}
+.ctrl{background:#fff;border-radius:10px;padding:10px 14px;margin-bottom:14px;border:1px solid #e5e7eb;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.cg{display:flex;align-items:center;gap:5px}.cl{font-size:10px;color:#6b7280;font-weight:600}
+.ni{background:#f9fafb;border:1px solid #e5e7eb;color:#0891b2;padding:3px 5px;border-radius:5px;font-size:11px;font-family:'JetBrains Mono',monospace;width:38px;text-align:center;outline:none}
+.tg{display:flex;align-items:center;gap:5px;cursor:pointer;user-select:none}.tg input{display:none}
+.tk{width:32px;height:17px;background:#d1d5db;border-radius:17px;position:relative;transition:.2s}.tk::after{content:'';width:13px;height:13px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.tg input:checked+.tk{background:#6366f1}.tg input:checked+.tk::after{transform:translateX(15px)}
+.dv{width:1px;height:18px;background:#e5e7eb;margin:0 1px}
+.tabs{display:flex;gap:2px;margin-bottom:14px}.tb{padding:7px 16px;border-radius:9px;border:1px solid #e5e7eb;cursor:pointer;font-size:11px;font-weight:600;font-family:'Noto Sans KR';background:#fff;color:#6b7280}.tb.a{background:#6366f1;color:#fff;border-color:#6366f1}
+.grid{display:grid;gap:10px;margin-bottom:14px}.grid>*{min-width:0;overflow-x:auto}.g5{grid-template-columns:repeat(5,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1fr 1fr}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:14px}.card .kl{font-size:10px;color:#6b7280;margin-bottom:3px}.card .kv{font-size:20px;font-weight:800;letter-spacing:-1px;font-family:'JetBrains Mono',monospace}.card .kf{display:flex;align-items:center;gap:3px;margin-top:2px;font-size:9px;color:#9ca3af}
+.B{display:inline-flex;align-items:center;gap:2px;padding:1px 5px;border-radius:10px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace}.B.u{background:#ecfdf5;color:#059669}.B.d{background:#fef2f2;color:#dc2626}.B.f{background:#fffbeb;color:#d97706}
+.CH{position:relative;width:100%;height:200px}
+.CC{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:16px}.CC h3{font-size:11px;font-weight:600;color:#6b7280;margin-bottom:10px}
+.cf{display:flex;gap:3px;margin-bottom:10px;flex-wrap:wrap}.cb{padding:4px 12px;border-radius:7px;border:1px solid #e5e7eb;background:#fff;color:#6b7280;font-size:10px;cursor:pointer;font-family:'Noto Sans KR';font-weight:500}.cb.a{border-color:#6366f1;background:#eef2ff;color:#6366f1}
+.ev{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:8px;cursor:pointer;transition:.15s}.ev:hover{border-color:#c7d2fe}
+.ev .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:10px}
+.ev .met{padding:6px 8px;background:#f9fafb;border-radius:6px}.ev .met .ml{font-size:8px;color:#9ca3af;margin-bottom:1px}.ev .met .mv{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.ev .met.hl-met{background:#eef2ff;border:1px solid #c7d2fe}
+.fl{display:inline-block;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:600;margin-right:3px}
+.fl-KR{background:#eef2ff;color:#6366f1}.fl-TW{background:#fdf2f8;color:#db2777}.fl-EN{background:#ecfdf5;color:#059669}.fl-TH{background:#fffbeb;color:#d97706}.fl-CN{background:#fef2f2;color:#dc2626}.fl-JP{background:#fef3c7;color:#92400e}
+.tr-btn{font-size:9px;color:#9ca3af;cursor:pointer;text-decoration:underline dotted;margin-left:4px}.tr-btn:hover{color:#6366f1}
+.tr-text{font-size:10px;color:#6366f1;margin-left:4px;display:none}
+.mom{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:14px;margin-bottom:8px}.mom h4{font-size:12px;font-weight:700;margin-bottom:6px}
+table.MT{width:100%;border-collapse:collapse}.MT th{padding:5px 8px;font-size:9px;font-weight:600;color:#9ca3af;text-align:center;border-bottom:1px solid #f3f4f6}.MT th:first-child{text-align:left}
+.MT td{padding:7px 8px;font-size:11px;text-align:center;font-family:'JetBrains Mono',monospace;color:#374151;border-bottom:1px solid #fafafa}.MT td:first-child{text-align:left;font-family:'Noto Sans KR';font-weight:600;color:#111827;font-size:11px}.MT td.hl{background:#eef2ff;color:#4338ca;font-weight:700}
+.DP{background:#f9fafb;border:1px solid #e5e7eb;border-radius:9px;padding:14px;margin-top:8px;overflow:hidden}
+.IB{padding:7px 10px;background:#eef2ff;border-radius:7px;border-left:3px solid #6366f1;font-size:11px;font-weight:500;line-height:1.5;margin-top:8px}
+.st2{font-size:14px;font-weight:700;margin:18px 0 6px}.sub2{font-size:10px;color:#9ca3af;margin-bottom:8px}
+.footer{margin-top:28px;padding:10px 0;border-top:1px solid #e5e7eb;text-align:center}.footer p{font-size:9px;color:#9ca3af}
+@media(max-width:900px){.g5,.g4{grid-template-columns:1fr 1fr}.ctrl{flex-direction:column;align-items:flex-start}.dv{display:none}.ugrid,.saved-grid{grid-template-columns:1fr}}
+@media print{body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.bbtn,.ctrl,.tabs,.cf,.gbtn,button{display:none!important}.hdr{border:none;box-shadow:none;page-break-after:avoid}.ev,.mom,.card,.CC{break-inside:avoid;box-shadow:none;border-color:#e5e7eb}.W{max-width:100%;padding:10px}.footer{display:none}canvas{max-height:180px}}
+/* AI 랭킹 섹션 */
+.rank-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.rank-box{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px}
+.rank-box.top{border-top:3px solid #059669}
+.rank-box.bottom{border-top:3px solid #ef4444}
+.rank-title{font-size:12px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.rank-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid #f3f4f6}
+.rank-item:last-child{border-bottom:none}
+.rank-num{width:20px;height:20px;border-radius:50%;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.top .rank-num{background:#dcfce7;color:#059669}
+.bottom .rank-num{background:#fee2e2;color:#ef4444}
+.rank-info{flex:1;min-width:0}
+.rank-name{font-size:11px;font-weight:700;color:#111827;word-break:break-all;line-height:1.4}
+.rank-metrics{font-size:9px;color:#9ca3af;margin:2px 0 4px;font-family:'JetBrains Mono',monospace}
+.rank-comment{font-size:10px;color:#374151;line-height:1.55;background:#f9fafb;border-radius:6px;padding:5px 8px;border-left:2px solid #d1d5db}
+.top .rank-comment{border-left-color:#059669;background:#f0fdf4}
+.bottom .rank-comment{border-left-color:#ef4444;background:#fef2f2}
+.ai-badge{display:none}
+.rank-loading{display:none}
+.rank-error{display:none}
+.gen-btn{display:none}
+@media(max-width:900px){.rank-wrap{grid-template-columns:1fr}}
+</style></head><body>
+<div class="W" id="app"><div style="text-align:center;padding:80px 0;color:#9ca3af">로딩 중...</div></div>
 <script>
-document.querySelectorAll('.tab').forEach(t=>{t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.getElementById('p'+t.dataset.t).classList.add('active');};});
-const labels=['2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05'];
-// 중국(CN) — Snowflake 실데이터 (2025-10~2026-05). 차트값은 상대지수(절대 SU 비노출)
-const charts=[
- {key:'cn',name:'중국',code:'CN',line:'#c0392b',bar:'rgba(192,57,43,.18)',mau:[58,52,56,55,76,99,100,88],su:[23,21,35,26,38,88,100,90],stats:[['MAU','+53.7%','+50.7%','up','up'],['DB','+182.9%','+292.1%','up','up']]},
-];
-function legRow(c,r,i){const mk=i===0?'mk':'mk bar';return '<div class="row"><span class="'+mk+'" style="background:'+c.line+'"></span><span class="nm">'+r[0]+'</span><span class="v '+r[3]+'">'+r[1]+'</span><span class="v '+r[4]+'">'+r[2]+'</span></div>';}
-const hasChartData=charts.every(c=>c.mau.length&&c.su.length);
-if(hasChartData){
-  document.getElementById('chartGrid').innerHTML=charts.map(c=>'<div class="ccard" style="--accent:'+c.line+'"><div class="chd"><div><div class="ctitle">'+c.name+'</div><div class="csub">'+c.code+' · MAU+DB</div></div><div class="clegend">'+c.stats.map((r,i)=>legRow(c,r,i)).join('')+'<div class="cmonths"><span>최근3M</span><span>8M누적</span></div></div></div><div class="chart-wrap"><canvas id="ch_'+c.key+'" role="img" aria-label="'+c.name+' MAU 라인 및 DB 막대"></canvas></div></div>').join('');
-  charts.forEach(c=>{new Chart(document.getElementById('ch_'+c.key),{data:{labels,datasets:[{type:'bar',label:'DB',data:c.su,backgroundColor:c.bar,borderColor:c.bar,borderRadius:3,barPercentage:.62,categoryPercentage:.78,yAxisID:'ySU',order:2},{type:'line',label:'MAU',data:c.mau,borderColor:c.line,backgroundColor:c.line,borderWidth:2.5,tension:.45,pointRadius:2,pointHoverRadius:5,pointBackgroundColor:c.line,yAxisID:'yMAU',order:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},events:[],scales:{x:{grid:{display:false},ticks:{maxRotation:45,minRotation:45,autoSkip:true,maxTicksLimit:5,color:'#aaa',font:{size:8}}},yMAU:{position:'left',grid:{color:'rgba(0,0,0,.05)'},ticks:{display:false},title:{display:true,text:'MAU',color:c.line,font:{size:9,weight:'700'}},min:0,max:110},ySU:{position:'right',grid:{display:false},ticks:{display:false},title:{display:true,text:'DB',color:'#aaa',font:{size:9,weight:'700'}},min:0,max:110}}}});});
-}else{
-  document.getElementById('chartGrid').innerHTML='<div class="note" style="grid-column:1/-1">📊 중국 MAU·DB 추이 데이터 반영이 필요합니다. (원본 자료에 중국 데이터 미포함)</div>';
-  document.getElementById('cnInsight').style.display='none';
-}
-const palette={cn:{accent:'#c0392b',fill:'#f7e4e2',text:'#8f2c22'}};
-// 중국(CN) 인기 이벤트 — Snowflake 실데이터 (상담신청 기준 카테고리별 상위 시술)
-const ev={
- cn:{name:'중국',flag:'🇨🇳',sub:'시술 중심 · 피부·리프팅·보톡스 강세',cats:[
-   ['피부',['리쥬란힐러','쥬베룩','포텐자','리즈네','리쥬란아이','크라이오셀','스킨보톡스','써마지리프팅','리쥬란HBPLUS','울쎄라리프팅']],
-   ['리프팅',['울쎄라리프팅','울쎄라피프라임','온다리프팅','풀페이스리프팅','윤곽주사','얼굴지방분해(레이저)','인모드리프팅','티타늄리프팅','써마지리프팅','팔지방분해주사']],
-   ['보톡스',['사각턱보톡스','얼굴지방분해주사','윤곽주사','승모근보톡스','팔지방분해주사','종아리지방분해주사','허벅지지방분해주사','복부지방분해주사','입꼬리보톡스','종아리보톡스']],
-   ['필러',['팔자주름필러','이마필러','볼필러','입술필러','턱필러','앞광대필러','관자놀이필러','귀필러','옆볼필러','입꼬리필러']],
-   ['지방·다이어트',['얼굴지방분해주사','복부지방분해주사','팔지방분해주사','허벅지지방분해주사','옆구리지방분해주사','부유방지방분해주사','등지방분해주사','윤곽주사','종아리지방분해주사','승모근지방분해주사']],
-   ['제모',['얼굴제모','헤어라인제모','겨드랑이제모','브라질리언제모','다리제모','항문제모','등제모','비키니라인제모','턱제모','인중제모']],
- ]},
-};
-const hasEvData=Object.values(ev).every(d=>d.cats.length);
-if(hasEvData){
-  document.getElementById('eventGrid').innerHTML=['cn'].map(k=>{const d=ev[k],p=palette[k];const rows=d.cats.map(([cat,items])=>{const chips=items.map((it,i)=>'<span class="chip" style="background:'+p.fill+';color:'+p.text+'"><span class="rk">'+(i+1)+'</span>'+it+'</span>').join('');return '<div class="cat-row"><div class="cat-lbl" style="--accent:'+p.accent+';color:'+p.accent+'">'+cat+'</div><div class="chips">'+chips+'</div></div>';}).join('');return '<div class="ev-card" style="--accent:'+p.accent+'"><div class="ev-hd"><span class="flag">'+d.flag+'</span><span class="nm">'+d.name+'</span></div><p class="ev-sub">'+d.sub+'</p>'+rows+'</div>';}).join('');
-}else{
-  document.getElementById('eventGrid').innerHTML='<div class="note">🇨🇳 중국 카테고리별 인기 이벤트(DB 상위) 데이터 반영이 필요합니다.</div>';
-}
-// 중국 카테고리 구성비 도넛 — Snowflake 실데이터 (상담신청 기준 비중)
-const catData={labels:['피부','리프팅','보톡스','필러','지방·다이어트','기타'],values:[34.8,28.8,16.6,10.8,4.4,4.6],colors:['#c0392b','#e07a5f','#e8b04b','#8e6fcf','#5b9aa0','#cbb8a8']};
-new Chart(document.getElementById('catDonut'),{type:'doughnut',data:{labels:catData.labels,datasets:[{data:catData.values,backgroundColor:catData.colors,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{enabled:false}},events:[]}});
-document.getElementById('catLegend').innerHTML=catData.labels.map((l,i)=>'<div class="dl-row"><span class="dl-dot" style="background:'+catData.colors[i]+'"></span><span class="dl-nm">'+l+'</span><span class="dl-v">'+catData.values[i]+'%</span></div>').join('');
+const SAMPLE={"hospital":"히트성형외과","months":["2026-01","2026-02","2026-03","2026-04"],"events":[{"n":"추가금 없는 얼굴지방흡입 x 이중턱, 턱선, 근육묶기, 펠리컨, 실리프팅","l":"KR","m":{"2026-01":[10036,362,33320540],"2026-02":[10168,410,28655960],"2026-03":[10863,294,18191890],"2026-04":[8204,223,14432600]}},{"n":"3D프린팅 코성형, 코끝, 비순각, 기능코, 무보형물코","l":"KR","m":{"2026-01":[1438,50,3079510],"2026-02":[2107,47,2242890],"2026-03":[2728,120,3883280],"2026-04":[2490,104,3480930]}},{"n":"히트 추가금 없는 눈성형 모음.zip _ 눈재수술, 자연유착, 트임, 쌍꺼풀","l":"KR","m":{"2026-01":[14215,527,17433330],"2026-02":[8258,221,6664090],"2026-03":[6074,141,3729420],"2026-04":[4918,96,2443710]}},{"n":"다크서클 제거, 애교살 보존 눈밑지방재배치, 실밥 제거 없음, 추가 비용 없음","l":"KR","m":{"2026-01":[0,0,0],"2026-02":[46,0,460],"2026-03":[725,74,1293850],"2026-04":[1070,95,4209930]}},{"n":"이마축소 이마윤곽","l":"KR","m":{"2026-01":[1889,82,4851970],"2026-02":[1280,39,2499220],"2026-03":[1165,60,3392210],"2026-04":[829,33,2088710]}},{"n":"眼部整形_眼部重修, 眼角, 雙眼皮","l":"TW","m":{"2026-01":[737,34,1187790],"2026-02":[837,41,1453450],"2026-03":[827,49,1624770],"2026-04":[456,33,912010]}},{"n":"내시경 이마거상술","l":"KR","m":{"2026-01":[1530,62,5538530],"2026-02":[1174,36,3293880],"2026-03":[1168,36,3272760],"2026-04":[774,27,2488170]}},{"n":"3D printing Rhinoplasty","l":"EN","m":{"2026-01":[648,32,1503960],"2026-02":[528,30,1337010],"2026-03":[666,33,1532610],"2026-04":[230,19,517110]}},{"n":"3D 列印 鼻部整形","l":"TW","m":{"2026-01":[207,22,712080],"2026-02":[201,16,545490],"2026-03":[248,25,821450],"2026-04":[199,18,465620]}},{"n":"3D Facial Liposuction","l":"EN","m":{"2026-01":[229,20,369670],"2026-02":[163,16,166830],"2026-03":[200,20,292010],"2026-04":[115,10,178220]}},{"n":"ศัลยกรรมตา","l":"TH","m":{"2026-01":[459,19,1196930],"2026-02":[321,18,966620],"2026-03":[367,14,908880],"2026-04":[211,9,450180]}},{"n":"3D臉部抽脂","l":"TW","m":{"2026-01":[57,9,97260],"2026-02":[86,12,129080],"2026-03":[116,15,264370],"2026-04":[62,9,100350]}},{"n":"히트 추가금 없는 첫코성형 _ 코수술, 코성형, 콧대, 코끝","l":"KR","m":{"2026-01":[419,22,1521280],"2026-02":[279,7,774550],"2026-03":[302,14,1104340],"2026-04":[232,8,818060]}},{"n":"ศัลยกรรมจมูกด้วยการพิมพ์ 3มิติ","l":"TH","m":{"2026-01":[228,5,321360],"2026-02":[258,12,652910],"2026-03":[344,12,644370],"2026-04":[172,6,364630]}},{"n":"Forehead Reduction Surgery","l":"EN","m":{"2026-01":[109,10,247690],"2026-02":[84,10,166120],"2026-03":[43,6,87790],"2026-04":[41,5,68650]}},{"n":"Endoscopic Forehead Lift","l":"EN","m":{"2026-01":[106,11,339610],"2026-02":[55,7,160800],"2026-03":[47,7,146570],"2026-04":[26,5,96490]}},{"n":"การดูดไขมันใบหน้า 3 มิติ","l":"TH","m":{"2026-01":[72,2,46700],"2026-02":[106,7,195930],"2026-03":[143,8,220610],"2026-04":[68,4,124780]}},{"n":"3D프린팅코재수술","l":"KR","m":{"2026-01":[96,2,142070],"2026-02":[62,1,52480],"2026-03":[116,3,354730],"2026-04":[77,4,255750]}},{"n":"額頭縮小","l":"TW","m":{"2026-01":[7,2,18800],"2026-02":[6,2,1830],"2026-03":[14,5,36360],"2026-04":[13,3,42570]}},{"n":"การยกหน้าผากด้วยกล้องส่องภายใน","l":"TH","m":{"2026-01":[85,4,247250],"2026-02":[45,1,16650],"2026-03":[49,3,490],"2026-04":[51,3,93090]}},{"n":"Elravie Re2O","l":"EN","m":{"2026-01":[87,1,39730],"2026-02":[98,2,49560],"2026-03":[152,3,117220],"2026-04":[122,3,101640]}},{"n":"3D面部吸脂","l":"TW","m":{"2026-01":[9,4,90],"2026-02":[0,0,0],"2026-03":[2,2,20],"2026-04":[9,3,90]}},{"n":"Elravie Re2O_skin booster, Collagen injection","l":"EN","m":{"2026-01":[2,1,20],"2026-02":[0,0,0],"2026-03":[1,1,10],"2026-04":[3,2,30]}},{"n":"엘라비에 리투오_스킨부스터, 콜라겐주사","l":"KR","m":{"2026-01":[321,2,111580],"2026-02":[195,2,56500],"2026-03":[149,2,98790],"2026-04":[105,1,44890]}},{"n":"缩小额头术","l":"CN","m":{"2026-01":[0,0,0],"2026-02":[5,2,50],"2026-03":[4,3,40],"2026-04":[1,1,10]}},{"n":"การลดขนาดหน้าผาก","l":"TH","m":{"2026-01":[53,1,75890],"2026-02":[86,0,3810],"2026-03":[94,4,179660],"2026-04":[47,1,11540]}},{"n":"히트에서 히트한 비익거상","l":"KR","m":{"2026-01":[0,0,0],"2026-02":[1,0,0],"2026-03":[3,0,0],"2026-04":[1,0,0]}},{"n":"히트_프린팅남자코성형","l":"KR","m":{"2026-01":[37,0,370],"2026-02":[21,1,210],"2026-03":[38,2,380],"2026-04":[31,0,310]}},{"n":"히트_비순각","l":"KR","m":{"2026-01":[4,0,0],"2026-02":[6,0,0],"2026-03":[0,0,0],"2026-04":[2,0,0]}},{"n":"히트_보조개성형","l":"KR","m":{"2026-01":[0,0,0],"2026-02":[0,0,0],"2026-03":[0,0,0],"2026-04":[1,0,0]}},{"n":"히트 코끝성형","l":"KR","m":{"2026-01":[3,0,0],"2026-02":[0,0,0],"2026-03":[0,0,0],"2026-04":[1,0,0]}},{"n":"히트 자가늑 코성형","l":"KR","m":{"2026-01":[1,0,0],"2026-02":[71,1,84550],"2026-03":[105,0,48120],"2026-04":[67,0,670]}},{"n":"중년 눈성형_자연유착, 상안검, 하안검, 눈썹거상술, 처진눈, 눈처짐, 동안성형","l":"KR","m":{"2026-01":[332,3,182680],"2026-02":[258,1,318010],"2026-03":[228,4,352420],"2026-04":[169,0,118530]}},{"n":"수능이벤트 X 코성형, 코수술","l":"KR","m":{"2026-01":[92,2,134860],"2026-02":[41,1,17260],"2026-03":[25,0,250],"2026-04":[16,0,160]}},{"n":"수능이벤트 X 자연유착 눈성형","l":"KR","m":{"2026-01":[263,15,674110],"2026-02":[89,5,118480],"2026-03":[31,0,310],"2026-04":[15,0,150]}},{"n":"수능이벤트 X 얼굴지방흡입","l":"KR","m":{"2026-01":[196,4,134990],"2026-02":[142,1,53420],"2026-03":[112,0,4310],"2026-04":[70,0,700]}},{"n":"히트_트임","l":"KR","m":{"2026-01":[1,0,0],"2026-02":[2,0,0],"2026-03":[0,0,0],"2026-04":[0,0,0]}},{"n":"히트_무보형물코성형","l":"KR","m":{"2026-01":[1,0,0],"2026-02":[0,0,0],"2026-03":[0,0,0],"2026-04":[0,0,0]}},{"n":"히트_기능코성형","l":"KR","m":{"2026-01":[0,0,0],"2026-02":[1,0,0],"2026-03":[0,0,0],"2026-04":[0,0,0]}}],"cpc":{"히트 추가금 없는 눈성형 모음.zip _ 눈재수술, 자연유착, 트임, 쌍꺼풀":{"2026-01":[25686,6921,0.2694463910301331,4443.651206473053,30754510,197,88650000],"2026-02":[15779,4340,0.275049115913556,4261.389400921659,18494430,107,48150000],"2026-03":[13638,3465,0.254069511658601,4947.598845598845,17143430,71,31950000],"2026-04":[11325,3030,0.2675496688741722,5286.904290429043,16019320,53,23850000]},"3D프린팅 코성형, 코끝, 비순각, 기능코, 무보형물코":{"2026-02":[5572,934,0.16762383345297918,4507.997858672376,4210470,11,10901000],"2026-03":[7924,1238,0.15623422513881877,6412.738287560582,7938970,20,19820000],"2026-04":[7094,1112,0.15675218494502396,9452.94964028777,10511680,22,21802000]},"다크서클 제거, 애교살 보존 눈밑지방재배치, 실밥 제거 없음, 추가 비용 없음":{"2026-03":[3025,397,0.1312396694214876,6788.337531486146,2694970,8,7832000]}},"tag":{"총합계":{"2025-12":552901,"2026-01":625030,"2026-02":504499,"2026-03":484116,"2026-04":341226},"사각턱보톡스":{"2025-12":17497,"2026-01":18744,"2026-02":15852,"2026-03":14913,"2026-04":10233},"윤곽주사":{"2025-12":11444,"2026-01":12696,"2026-02":11759,"2026-03":9761,"2026-04":6147},"쌍꺼풀(자연유착)":{"2025-12":14018,"2026-01":15895,"2026-02":10224,"2026-03":8973,"2026-04":6121},"얼굴지방분해주사":{"2025-12":9907,"2026-01":11159,"2026-02":10542,"2026-03":8463,"2026-04":5429},"쌍꺼풀(매몰)":{"2025-12":12281,"2026-01":13937,"2026-02":8963,"2026-03":7823,"2026-04":5293},"코끝(자가연골)":{"2025-12":9341,"2026-01":10148,"2026-02":7654,"2026-03":7274,"2026-04":4882},"눈재수술":{"2025-12":10786,"2026-01":12529,"2026-02":8133,"2026-03":7191,"2026-04":4890},"눈매교정":{"2025-12":10391,"2026-01":12197,"2026-02":7984,"2026-03":6923,"2026-04":4690},"쥬베룩":{"2025-12":6269,"2026-01":7678,"2026-02":6536,"2026-03":6508,"2026-04":4522},"앞트임":{"2025-12":9260,"2026-01":11352,"2026-02":7429,"2026-03":6432,"2026-04":4210},"입술필러":{"2025-12":6175,"2026-01":7796,"2026-02":7366,"2026-03":6336,"2026-04":4424},"잔주름보톡스":{"2025-12":7586,"2026-01":8120,"2026-02":5926,"2026-03":6141,"2026-04":4470},"콧대(자가조직)":{"2025-12":7607,"2026-01":8251,"2026-02":6215,"2026-03":6097,"2026-04":3944},"뒤트임":{"2025-12":8214,"2026-01":10133,"2026-02":6785,"2026-03":5866,"2026-04":3685},"침샘보톡스":{"2025-12":6342,"2026-01":6991,"2026-02":5479,"2026-03":5831,"2026-04":3955},"입꼬리보톡스":{"2025-12":5677,"2026-01":6988,"2026-02":6133,"2026-03":5828,"2026-04":4244},"스킨보톡스":{"2025-12":5114,"2026-01":5686,"2026-02":4964,"2026-03":5293,"2026-04":4014},"콧대(보형물)":{"2025-12":6462,"2026-01":7018,"2026-02":5521,"2026-03":5269,"2026-04":3467},"팔지방분해주사":{"2025-12":5585,"2026-01":6005,"2026-02":5640,"2026-03":5085,"2026-04":3555},"입꼬리필러":{"2025-12":4280,"2026-01":5509,"2026-02":5510,"2026-03":4925,"2026-04":3425},"쌍꺼풀(절개)":{"2025-12":7441,"2026-01":8717,"2026-02":5795,"2026-03":4863,"2026-04":3533},"복부지방분해주사":{"2025-12":5355,"2026-01":5820,"2026-02":5507,"2026-03":4839,"2026-04":3420},"허벅지지방분해주사":{"2025-12":5222,"2026-01":5687,"2026-02":5385,"2026-03":4696,"2026-04":3328},"인모드리프팅":{"2025-12":6777,"2026-01":6616,"2026-02":4982,"2026-03":4636,"2026-04":3554},"코끝(보형물)":{"2025-12":5487,"2026-01":6179,"2026-02":4927,"2026-03":4557,"2026-04":3044},"인중제모":{"2025-12":4412,"2026-01":4745,"2026-02":4062,"2026-03":4550,"2026-04":3845},"눈가주름보톡스":{"2025-12":5902,"2026-01":6019,"2026-02":4171,"2026-03":4392,"2026-04":3224},"밑트임":{"2025-12":5945,"2026-01":6819,"2026-02":4386,"2026-03":4189,"2026-04":2733},"코재수술":{"2025-12":4888,"2026-01":5604,"2026-02":4414,"2026-03":4104,"2026-04":2634},"승모근보톡스":{"2025-12":4272,"2026-01":4717,"2026-02":4011,"2026-03":4100,"2026-04":2915},"리쥬란힐러":{"2025-12":3496,"2026-01":4440,"2026-02":4260,"2026-03":4019,"2026-04":2629},"온다리프팅":{"2025-12":3620,"2026-01":3972,"2026-02":3713,"2026-03":3834,"2026-04":3222},"슈링크유니버스":{"2025-12":4219,"2026-01":4537,"2026-02":3683,"2026-03":3833,"2026-04":2682},"겨드랑이제모":{"2025-12":3817,"2026-01":3925,"2026-02":3302,"2026-03":3776,"2026-04":3283},"이마주름보톡스":{"2025-12":4678,"2026-01":4729,"2026-02":3614,"2026-03":3759,"2026-04":2935},"윗트임":{"2025-12":5174,"2026-01":6093,"2026-02":3992,"2026-03":3715,"2026-04":2369},"종아리보톡스":{"2025-12":3868,"2026-01":4146,"2026-02":3385,"2026-03":3687,"2026-04":2809},"코끝(기증연골)":{"2025-12":4031,"2026-01":4424,"2026-02":3606,"2026-03":3663,"2026-04":2315},"복코교정(수술)":{"2025-12":4837,"2026-01":5250,"2026-02":3985,"2026-03":3590,"2026-04":2349},"미간보톡스":{"2025-12":4435,"2026-01":4878,"2026-02":3702,"2026-03":3499,"2026-04":2571},"브라질리언제모":{"2025-12":3119,"2026-01":3476,"2026-02":3056,"2026-03":3433,"2026-04":2662},"이마필러":{"2025-12":3241,"2026-01":4249,"2026-02":3972,"2026-03":3432,"2026-04":2445},"눈밑지방재배치":{"2025-12":3844,"2026-01":4548,"2026-02":3221,"2026-03":3365,"2026-04":2662},"종아리지방분해주사":{"2025-12":3396,"2026-01":3440,"2026-02":3365,"2026-03":3252,"2026-04":2255},"얼굴제모":{"2025-12":3209,"2026-01":3504,"2026-02":3117,"2026-03":3179,"2026-04":2386},"콧볼축소":{"2025-12":3963,"2026-01":4233,"2026-02":3225,"2026-03":3043,"2026-04":2136},"콧볼보톡스":{"2025-12":3415,"2026-01":4163,"2026-02":3178,"2026-03":2979,"2026-04":2171},"턱제모":{"2025-12":2601,"2026-01":3210,"2026-02":2734,"2026-03":2958,"2026-04":2129},"팔자주름필러":{"2025-12":2411,"2026-01":2966,"2026-02":2815,"2026-03":2816,"2026-04":1926},"이중턱지방흡입":{"2025-12":2249,"2026-01":2799,"2026-02":2788,"2026-03":2810,"2026-04":1926},"슈링크리프팅":{"2025-12":3809,"2026-01":3768,"2026-02":2894,"2026-03":2793,"2026-04":1955},"턱끝보톡스":{"2025-12":2837,"2026-01":3379,"2026-02":2975,"2026-03":2715,"2026-04":1841},"팔지방흡입":{"2025-12":2045,"2026-01":2336,"2026-02":2356,"2026-03":2620,"2026-04":1782},"팔제모":{"2025-12":2197,"2026-01":2602,"2026-02":2149,"2026-03":2603,"2026-04":2142},"실리프팅":{"2025-12":3530,"2026-01":3425,"2026-02":2816,"2026-03":2598,"2026-04":1863},"울쎄라리프팅":{"2025-12":2661,"2026-01":3272,"2026-02":2933,"2026-03":2594,"2026-04":2099},"옆구리지방분해주사":{"2025-12":2435,"2026-01":2834,"2026-02":2585,"2026-03":2529,"2026-04":1882},"레이저토닝":{"2025-12":3261,"2026-01":3520,"2026-02":2510,"2026-03":2441,"2026-04":1872},"풀페이스리프팅":{"2025-12":2690,"2026-01":3064,"2026-02":2926,"2026-03":2424,"2026-04":1962},"콜라겐주사":{"2025-12":2137,"2026-01":2851,"2026-02":2307,"2026-03":2321,"2026-04":1600},"복부지방흡입":{"2025-12":1949,"2026-01":2202,"2026-02":2244,"2026-03":2318,"2026-04":1568},"종아리제모":{"2025-12":2096,"2026-01":2381,"2026-02":1912,"2026-03":2296,"2026-04":1979},"수염제모":{"2025-12":1780,"2026-01":2018,"2026-02":1951,"2026-03":2284,"2026-04":1668},"팔자주름보톡스":{"2025-12":2693,"2026-01":2717,"2026-02":2007,"2026-03":2278,"2026-04":1518},"사각턱수술":{"2025-12":2455,"2026-01":2677,"2026-02":2320,"2026-03":2268,"2026-04":1459},"턱끝축소":{"2025-12":2425,"2026-01":2644,"2026-02":2325,"2026-03":2268,"2026-04":1441},"쌍꺼풀(부분절개)":{"2025-12":3847,"2026-01":4073,"2026-02":2612,"2026-03":2245,"2026-04":1868},"아쿠아필링":{"2025-12":3160,"2026-01":3264,"2026-02":2054,"2026-03":2220,"2026-04":1668},"광대축소(전체)":{"2025-12":2421,"2026-01":2620,"2026-02":2276,"2026-03":2205,"2026-04":1412},"광대축소(옆광대)":{"2025-12":2378,"2026-01":2575,"2026-02":2245,"2026-03":2196,"2026-04":1369},"얼굴지방흡입":{"2025-12":1869,"2026-01":2542,"2026-02":2219,"2026-03":2162,"2026-04":1429},"포텐자":{"2025-12":1574,"2026-01":2079,"2026-02":1818,"2026-03":2122,"2026-04":1744},"피코토닝":{"2025-12":2843,"2026-01":3092,"2026-02":2030,"2026-03":2114,"2026-04":1632},"광대축소(앞광대)":{"2025-12":2240,"2026-01":2405,"2026-02":2125,"2026-03":2086,"2026-04":1295},"LDM":{"2025-12":2992,"2026-01":2994,"2026-02":1950,"2026-03":2043,"2026-04":1518},"턱필러":{"2025-12":2052,"2026-01":2638,"2026-02":2406,"2026-03":2013,"2026-04":1395},"눈밑지방제거":{"2025-12":1926,"2026-01":2369,"2026-02":1762,"2026-03":1988,"2026-04":1557},"가슴(보형물)":{"2025-12":2105,"2026-01":2447,"2026-02":2169,"2026-03":1981,"2026-04":1753},"다리제모":{"2025-12":1560,"2026-01":1899,"2026-02":1452,"2026-03":1940,"2026-04":1650},"허벅지지방흡입":{"2025-12":1764,"2026-01":1936,"2026-02":2014,"2026-03":1910,"2026-04":1319},"물광주사":{"2025-12":1737,"2026-01":2122,"2026-02":1911,"2026-03":1885,"2026-04":1189},"이중턱근육묶기":{"2025-12":1308,"2026-01":1625,"2026-02":1900,"2026-03":1884,"2026-04":1351},"몽고트임":{"2025-12":2831,"2026-01":3672,"2026-02":2477,"2026-03":1876,"2026-04":1367},"콧등보톡스":{"2025-12":2239,"2026-01":2582,"2026-02":1928,"2026-03":1781,"2026-04":1242},"애교필러":{"2025-12":1484,"2026-01":1856,"2026-02":1891,"2026-03":1754,"2026-04":1181},"턱끝수술":{"2025-12":1946,"2026-01":2197,"2026-02":1845,"2026-03":1744,"2026-04":1119},"사마귀제거":{"2025-12":1601,"2026-01":1771,"2026-02":1790,"2026-03":1709,"2026-04":1212},"러브핸들지방흡입":{"2025-12":1220,"2026-01":1403,"2026-02":1486,"2026-03":1702,"2026-04":1147},"티타늄리프팅":{"2025-12":1390,"2026-01":1419,"2026-02":1294,"2026-03":1642,"2026-04":1157},"울쎄라피프라임":{"2025-12":1571,"2026-01":1938,"2026-02":1766,"2026-03":1639,"2026-04":1337},"부유방지방분해주사":{"2025-12":1947,"2026-01":1957,"2026-02":1804,"2026-03":1635,"2026-04":1110},"비립종제거":{"2025-12":1462,"2026-01":1656,"2026-02":1763,"2026-03":1615,"2026-04":1165},"비후성비염수술":{"2025-12":1862,"2026-01":2181,"2026-02":1668,"2026-03":1613,"2026-04":1151},"눈밑필러":{"2025-12":1231,"2026-01":1578,"2026-02":1706,"2026-03":1593,"2026-04":1018},"젠틀맥스프로":{"2025-12":1020,"2026-01":1199,"2026-02":1431,"2026-03":1540,"2026-04":1216},"옆구리지방흡입":{"2025-12":1044,"2026-01":1199,"2026-02":1253,"2026-03":1537,"2026-04":1050},"쥐젖제거":{"2025-12":1341,"2026-01":1525,"2026-02":1629,"2026-03":1535,"2026-04":1078},"콧대(인공조직)":{"2025-12":1628,"2026-01":1930,"2026-02":1466,"2026-03":1510,"2026-04":995},"코필러":{"2025-12":1742,"2026-01":1899,"2026-02":1636,"2026-03":1480,"2026-04":1025},"점제거시술":{"2025-12":1415,"2026-01":1530,"2026-02":1653,"2026-03":1436,"2026-04":1038},"리쥬란HBPLUS":{"2025-12":1058,"2026-01":1284,"2026-02":1563,"2026-03":1414,"2026-04":859},"리쥬란아이":{"2025-12":1410,"2026-01":1656,"2026-02":1614,"2026-03":1398,"2026-04":952},"앞광대필러":{"2025-12":1159,"2026-01":1629,"2026-02":1488,"2026-03":1390,"2026-04":988},"울트라콜":{"2025-12":1567,"2026-01":2060,"2026-02":1417,"2026-03":1388,"2026-04":924},"항문제모":{"2025-12":1350,"2026-01":1402,"2026-02":1177,"2026-03":1378,"2026-04":1035},"등지방분해주사":{"2025-12":1713,"2026-01":1570,"2026-02":1353,"2026-03":1345,"2026-04":912},"볼지방흡입":{"2025-12":1402,"2026-01":1817,"2026-02":1522,"2026-03":1343,"2026-04":941},"턱끝필러":{"2025-12":1291,"2026-01":1676,"2026-02":1420,"2026-03":1323,"2026-04":841},"관자놀이필러":{"2025-12":995,"2026-01":1535,"2026-02":1542,"2026-03":1316,"2026-04":942},"리투오":{"2025-12":964,"2026-01":1408,"2026-02":1178,"2026-03":1309,"2026-04":1025},"광대보톡스":{"2025-12":1136,"2026-01":1578,"2026-02":1434,"2026-03":1300,"2026-04":698},"옆볼필러":{"2025-12":952,"2026-01":1362,"2026-02":1205,"2026-03":1269,"2026-04":846},"눈밑지방이식":{"2025-12":1646,"2026-01":1830,"2026-02":1229,"2026-03":1218,"2026-04":855},"입가주름보톡스":{"2025-12":1563,"2026-01":1609,"2026-02":1197,"2026-03":1211,"2026-04":874},"비중격만곡증수술":{"2025-12":1605,"2026-01":1727,"2026-02":1263,"2026-03":1183,"2026-04":909},"여드름압출":{"2025-12":1761,"2026-01":1680,"2026-02":1197,"2026-03":1179,"2026-04":858},"착색토닝":{"2025-12":1145,"2026-01":1402,"2026-02":1136,"2026-03":1168,"2026-04":851},"아이슈링크":{"2025-12":1557,"2026-01":1699,"2026-02":1341,"2026-03":1166,"2026-04":832},"코절골술":{"2025-12":1638,"2026-01":1675,"2026-02":1160,"2026-03":1140,"2026-04":814},"하안검성형":{"2025-12":1315,"2026-01":1510,"2026-02":1126,"2026-03":1121,"2026-04":824},"문신제거":{"2025-12":1001,"2026-01":1362,"2026-02":1046,"2026-03":1119,"2026-04":920},"볼필러":{"2025-12":833,"2026-01":1162,"2026-02":1082,"2026-03":1110,"2026-04":758},"윤곽톡스":{"2025-12":1324,"2026-01":1484,"2026-02":1353,"2026-03":1103,"2026-04":767},"아포지레이저":{"2025-12":1037,"2026-01":1106,"2026-02":978,"2026-03":1088,"2026-04":830},"지방흡입재수술":{"2025-12":950,"2026-01":1171,"2026-02":955,"2026-03":1071,"2026-04":653},"코조각주사":{"2025-12":1246,"2026-01":1452,"2026-02":1268,"2026-03":1062,"2026-04":824},"등지방흡입":{"2025-12":719,"2026-01":829,"2026-02":821,"2026-03":1053,"2026-04":644},"써마지리프팅":{"2025-12":1120,"2026-01":1314,"2026-02":1124,"2026-03":1026,"2026-04":764},"관자놀이보톡스":{"2025-12":901,"2026-01":1093,"2026-02":1056,"2026-03":1025,"2026-04":761},"가슴재수술":{"2025-12":1154,"2026-01":1345,"2026-02":1190,"2026-03":1022,"2026-04":884},"부유방흡입":{"2025-12":813,"2026-01":913,"2026-02":847,"2026-03":1018,"2026-04":636},"듀얼토닝":{"2025-12":1289,"2026-01":1285,"2026-02":951,"2026-03":1007,"2026-04":803},"크라이오셀":{"2025-12":1343,"2026-01":1547,"2026-02":1094,"2026-03":1001,"2026-04":680},"귀필러":{"2025-12":1127,"2026-01":1284,"2026-02":1165,"2026-03":992,"2026-04":671},"치아미백":{"2025-12":753,"2026-01":942,"2026-02":876,"2026-03":990,"2026-04":768},"안면거상술":{"2025-12":885,"2026-01":1202,"2026-02":940,"2026-03":934,"2026-04":721},"한관종제거":{"2025-12":581,"2026-01":822,"2026-02":961,"2026-03":925,"2026-04":670},"미니거상":{"2025-12":925,"2026-01":1197,"2026-02":920,"2026-03":904,"2026-04":659},"코재수술(실리콘제거)":{"2025-12":793,"2026-01":924,"2026-02":780,"2026-03":894,"2026-04":374},"다한증보톡스":{"2025-12":966,"2026-01":1098,"2026-02":802,"2026-03":891,"2026-04":803},"여드름주사":{"2025-12":1432,"2026-01":1372,"2026-02":967,"2026-03":878,"2026-04":684},"비키니라인제모":{"2025-12":1008,"2026-01":1018,"2026-02":851,"2026-03":870,"2026-04":693},"안면윤곽재수술":{"2025-12":855,"2026-01":1069,"2026-02":933,"2026-03":859,"2026-04":534},"광대지방흡입":{"2025-12":803,"2026-01":1101,"2026-02":1035,"2026-03":858,"2026-04":567},"하이코":{"2025-12":811,"2026-01":910,"2026-02":849,"2026-03":852,"2026-04":571},"회음부제모":{"2025-12":723,"2026-01":761,"2026-02":650,"2026-03":838,"2026-04":577},"연어주사":{"2025-12":825,"2026-01":995,"2026-02":874,"2026-03":830,"2026-04":555},"코실리프팅":{"2025-12":787,"2026-01":863,"2026-02":802,"2026-03":787,"2026-04":519},"얼굴지방분해(레이저)":{"2025-12":821,"2026-01":896,"2026-02":1067,"2026-03":783,"2026-04":623},"코프팅":{"2025-12":645,"2026-01":785,"2026-02":810,"2026-03":782,"2026-04":518},"트임재수술":{"2025-12":984,"2026-01":1128,"2026-02":864,"2026-03":769,"2026-04":471},"풀페이스필러":{"2025-12":663,"2026-01":933,"2026-02":836,"2026-03":769,"2026-04":521},"코길이연장술":{"2025-12":1022,"2026-01":1102,"2026-02":738,"2026-03":752,"2026-04":529},"목주름보톡스":{"2025-12":684,"2026-01":819,"2026-02":679,"2026-03":742,"2026-04":517},"팔뚝보톡스":{"2025-12":687,"2026-01":785,"2026-02":782,"2026-03":738,"2026-04":588},"상안검성형":{"2025-12":1098,"2026-01":1167,"2026-02":861,"2026-03":731,"2026-04":586},"필링":{"2025-12":1142,"2026-01":1132,"2026-02":689,"2026-03":729,"2026-04":563},"클라리티":{"2025-12":798,"2026-01":932,"2026-02":786,"2026-03":729,"2026-04":621},"눈썹거상술":{"2025-12":1128,"2026-01":1210,"2026-02":863,"2026-03":716,"2026-04":537},"엑셀V":{"2025-12":776,"2026-01":934,"2026-02":665,"2026-03":715,"2026-04":476},"비절개코교정":{"2025-12":974,"2026-01":1032,"2026-02":728,"2026-03":710,"2026-04":534},"이마거상술":{"2025-12":838,"2026-01":878,"2026-02":728,"2026-03":677,"2026-04":470},"제네시스":{"2025-12":912,"2026-01":957,"2026-02":693,"2026-03":676,"2026-04":512},"비절개코끝시술":{"2025-12":772,"2026-01":781,"2026-02":658,"2026-03":663,"2026-04":493},"퀵광대":{"2025-12":810,"2026-01":956,"2026-02":805,"2026-03":649,"2026-04":439},"백옥주사":{"2025-12":2306,"2026-01":1930,"2026-02":710,"2026-03":643,"2026-04":408},"리프테라":{"2025-12":1223,"2026-01":1181,"2026-02":756,"2026-03":638,"2026-04":391},"눈썹반영구제거":{"2025-12":505,"2026-01":625,"2026-02":543,"2026-03":634,"2026-04":493},"필러제거주사":{"2025-12":597,"2026-01":703,"2026-02":637,"2026-03":630,"2026-04":534},"볼스컬트라":{"2025-12":722,"2026-01":1057,"2026-02":600,"2026-03":588,"2026-04":358},"신데렐라주사":{"2025-12":1890,"2026-01":1511,"2026-02":621,"2026-03":587,"2026-04":361},"팔자주름스컬트라":{"2025-12":728,"2026-01":1055,"2026-02":596,"2026-03":584,"2026-04":365},"인중축소술":{"2025-12":470,"2026-01":635,"2026-02":556,"2026-03":583,"2026-04":221},"피코슈어":{"2025-12":457,"2026-01":575,"2026-02":407,"2026-03":578,"2026-04":530},"올타이트리프팅":{"2025-12":389,"2026-01":490,"2026-02":503,"2026-03":577,"2026-04":435},"얼굴지방이식":{"2025-12":652,"2026-01":787,"2026-02":612,"2026-03":576,"2026-04":396},"허벅지제모":{"2025-12":863,"2026-01":842,"2026-02":645,"2026-03":570,"2026-04":404},"스킨스케일링":{"2025-12":751,"2026-01":787,"2026-02":614,"2026-03":560,"2026-04":337},"튠페이스리프팅":{"2025-12":1012,"2026-01":1012,"2026-02":717,"2026-03":558,"2026-04":367},"양악수술":{"2025-12":536,"2026-01":569,"2026-02":524,"2026-03":558,"2026-04":359},"목주름필러":{"2025-12":355,"2026-01":493,"2026-02":506,"2026-03":538,"2026-04":287},"인중축소보톡스":{"2025-12":703,"2026-01":802,"2026-02":476,"2026-03":523,"2026-04":427},"미용수액":{"2025-12":1289,"2026-01":1228,"2026-02":513,"2026-03":516,"2026-04":271},"코끝필러":{"2025-12":598,"2026-01":706,"2026-02":632,"2026-03":516,"2026-04":310},"팔자주름지방흡입":{"2025-12":480,"2026-01":689,"2026-02":642,"2026-03":502,"2026-04":360},"튠라이너":{"2025-12":1076,"2026-01":1057,"2026-02":598,"2026-03":495,"2026-04":388},"발목지방분해주사":{"2025-12":242,"2026-01":414,"2026-02":482,"2026-03":492,"2026-04":370},"겨드랑이미백":{"2025-12":287,"2026-01":332,"2026-02":292,"2026-03":492,"2026-04":401},"CO2레이저":{"2025-12":714,"2026-01":661,"2026-02":543,"2026-03":490,"2026-04":327},"리쥬란시너지스킨부스터":{"2025-12":451,"2026-01":559,"2026-02":507,"2026-03":483,"2026-04":321},"승모근지방분해주사":{"2025-12":601,"2026-01":364,"2026-02":415,"2026-03":479,"2026-04":364},"레디어스":{"2025-12":353,"2026-01":491,"2026-02":467,"2026-03":476,"2026-04":359},"눈물골지방이식":{"2025-12":635,"2026-01":646,"2026-02":502,"2026-03":475,"2026-04":332},"라라필":{"2025-12":705,"2026-01":636,"2026-02":418,"2026-03":474,"2026-04":369},"비타민주사":{"2025-12":1220,"2026-01":1156,"2026-02":474,"2026-03":464,"2026-04":252},"목제모":{"2025-12":640,"2026-01":671,"2026-02":660,"2026-03":464,"2026-04":331},"이마거상술(엔도타인)":{"2025-12":456,"2026-01":535,"2026-02":428,"2026-03":464,"2026-04":314},"하악수술":{"2025-12":388,"2026-01":410,"2026-02":418,"2026-03":461,"2026-04":277},"볼뉴머리프팅":{"2025-12":396,"2026-01":496,"2026-02":385,"2026-03":459,"2026-04":294},"이마축소":{"2025-12":415,"2026-01":496,"2026-02":375,"2026-03":404,"2026-04":327}}};
+const TR={"眼部整形_眼部重修, 眼角, 雙眼皮": "눈성형_눈재수술, 눈꼬리, 쌍꺼풀", "3D printing Rhinoplasty": "3D프린팅 코성형", "3D 列印 鼻部整形": "3D프린팅 코성형", "3D Facial Liposuction": "3D 얼굴지방흡입", "3D臉部抽脂": "3D 얼굴지방흡입", "3D面部吸脂": "3D 얼굴지방흡입", "Forehead Reduction Surgery": "이마축소술", "Endoscopic Forehead Lift": "내시경 이마거상술", "Elravie Re2O": "엘라비에 리투오", "Elravie Re2O_skin booster, Collagen injection": "엘라비에 리투오_스킨부스터, 콜라겐주사", "ポテンツァ": "포텐자", "リジュラン": "리쥬란", "ヒーラー": "힐러", "ジュベルック": "쥬베룩", "インモード": "인모드", "ウルセラピー": "울쎄라피", "サーマクール": "써마지", "シュリンク": "슈링크", "チタニウム": "티타늄", "オンダ": "온다", "オールタイト": "올타이트", "リポット": "리팟", "ピコ": "피코", "エラビエ": "엘라비에", "ボトックス": "보톡스", "リフティング": "리프팅", "ボンピングチップ": "봄핑칩", "Nチップ": "N칩", "DERNA": "더나", "脂肪再配置": "지방재배치", "脂肪注入": "지방이식", "脂肪吸引": "지방흡입", "脂肪溶解": "지방분해", "目の下": "눈밑", "クマ": "다크서클", "クマゼロ": "다크서클제로", "鼻整形": "코성형", "鼻筋": "콧대", "鼻先": "코끝", "初鼻": "첫코", "鼻翼": "콧날개", "豊胸": "가슴확대", "豊胸手術": "가슴확대수술", "胸": "가슴", "成形外科": "성형외과", "専門医": "전문의", "フィラー": "필러", "しわ": "주름", "首": "목", "老化": "노화", "消しゴム": "지우개", "ワンポイント": "원포인트", "二重": "쌍꺼풀", "目頭切開": "앞트임", "目尻切開": "뒤트임", "眼瞼下垂": "안검하수", "涙袋": "눈물주머니", "額縮小": "이마축소", "内視鏡": "내시경", "挙上": "거상", "小顔": "작은얼굴", "輪郭": "윤곽", "エラ": "사각턱", "頬骨": "광대", "糸": "실", "糸リフト": "실리프팅", "ハイフ": "하이푸", "高周波": "고주파", "超音波": "초음파", "レーザー": "레이저", "美白": "미백", "注射": "주사", "美容": "미용", "施術": "시술", "手術": "수술", "水光注射": "물광주사", "医院": "의원", "ギリン": "기린", "大韓民国": "대한민국", "再配置": "재배치", "再手術": "재수술", "修正": "수정", "カウンセリング": "상담", "プレミアム": "프리미엄", "ショット": "샷", "ユニバース": "유니버스", "スキン": "스킨", "ボリューム": "볼륨", "アクアピーリング": "아쿠아필링", "毛穴": "모공", "ケア": "관리", "肌": "피부", "管理": "관리", "童顔": "동안", "鍼": "침", "韓方": "한방", "しみ": "기미", "シミ": "기미", "肝斑": "간반", "色素": "색소", "除去": "제거", "クレーター": "크레이터", "治療": "치료", "自体": "자체", "再生": "재생", "真皮": "진피", "鼻部整形": "코성형", "眼部整形": "눈성형", "臉部抽脂": "얼굴지방흡입", "額頭": "이마", "雙眼皮": "쌍꺼풀", "列印": "프린팅", "臉部": "얼굴", "眼部": "눈", "鼻部": "코", "雙重": "이중", "雷射": "레이저", "護理": "관리", "採用": "채용", "光能": "광에너지", "皺紋": "주름", "痘疤": "여드름자국", "改善": "개선", "皮膚": "피부", "損傷": "손상", "擔心": "걱정", "黑斑": "검은반점", "精準": "정밀", "打擊": "타격", "針對": "대상", "激光": "레이저", "無需": "필요없음", "拉提": "리프팅", "緊緻": "탄력", "膠原蛋白": "콜라겐", "玻尿酸": "히알루론산", "隆鼻": "코높임", "削骨": "삭골", "豐胸": "가슴확대", "抽脂": "지방흡입", "縮小": "축소", "雕塑": "조각", "埋線": "매선", "音波": "초음파", "電波": "전파", "自體脂肪": "자가지방", "填充": "충전", "整形": "성형", "微整形": "미세성형", "醫美": "의료미용", "諮詢": "상담", "專業": "전문", "面部": "얼굴", "吸脂": "지방흡입", "缩小": "축소", "整形术": "성형술", "双眼皮": "쌍꺼풀", "脂肪填充": "지방충전", "溶脂": "지방분해", "瘦脸": "얼굴축소", "去皱": "주름제거", "祛斑": "기미제거", "超声刀": "초음파", "热玛吉": "써마지", "肉毒素": "보톡스", "胶原蛋白": "콜라겐", "水光": "물광", "埋线": "매선", "线雕": "실리프팅", "丰胸": "가슴확대", "自体脂肪": "자가지방", "面部轮廓": "얼굴윤곽", "下颌角": "사각턱", "颧骨": "광대", "额头": "이마", "ศัลยกรรมตา": "눈성형", "ศัลยกรรมจมูก": "코성형", "ศัลยกรรมจมูกด้วยการพิมพ์ 3มิติ": "3D프린팅 코성형", "การดูดไขมันใบหน้า 3 มิติ": "3D 얼굴지방흡입", "การยกหน้าผากด้วยกล้องส่องภายใน": "내시경 이마거상술", "การลดขนาดหน้าผาก": "이마축소", "อัลเทอร่า": "울쎄라", "โอลิจิโอ": "올리지오", "ยกกระชับ": "리프팅", "ดูดไขมัน": "지방흡입", "ไขมัน": "지방", "จมูก": "코", "ตา": "눈", "หน้าผาก": "이마", "ลดขนาด": "축소", "ศัลยกรรม": "성형", "พิมพ์": "프린팅", "เสริมจมูก": "코높임", "ตัดปีกจมูก": "콧날개축소", "เปิดหัวตา": "앞트임", "เปิดหางตา": "뒤트임", "ทำตาสองชั้น": "쌍꺼풀", "ยกคิ้ว": "눈썹거상", "ฉีดฟิลเลอร์": "필러주사", "โบท็อกซ์": "보톡스", "ร้อยไหม": "실리프팅", "เลเซอร์": "레이저", "ผิว": "피부", "ริ้วรอย": "주름", "กระชับ": "탄력", "หน้าเรียว": "얼굴축소", "ฉีดไขมัน": "지방이식", "เสริมหน้าผาก": "이마확대", "คลินิก": "클리닉", "โรงพยาบาล": "병원", "ปรึกษา": "상담", "Oligio": "올리지오", "Ulthera": "울쎄라", "HIFU": "하이푸", "Potenza": "포텐자", "Rejuran": "리쥬란", "Juvelook": "쥬베룩", "Thermage": "써마지", "rhinoplasty": "코성형", "forehead lift": "이마거상", "forehead reduction": "이마축소", "liposuction": "지방흡입", "filler": "필러", "botox": "보톡스", "lifting": "리프팅", "injection": "주사", "booster": "부스터", "contouring": "윤곽", "dissolving": "분해", "non-surgical": "비수술", "surgical": "수술", "fat": "지방", "facial": "얼굴", "eye": "눈", "nose": "코", "breast": "가슴", "thread": "실", "laser": "레이저", "skin": "피부", "blepharoplasty": "눈성형", "augmentation": "확대", "reduction": "축소", "revision": "재수술", "double eyelid": "쌍꺼풀", "jaw": "턱", "cheekbone": "광대", "chin": "턱끝", "implant": "보형물", "fat graft": "지방이식", "sculpting": "조각", "anti-aging": "안티에이징", "wrinkle": "주름", "pore": "모공", "acne": "여드름", "scar": "흉터", "whitening": "미백", "tightening": "탄력", "rejuvenation": "재생", "collagen": "콜라겐", "hyaluronic": "히알루론산", "mesotherapy": "메조테라피", "PRP": "PRP자가혈", "micro": "마이크로", "needling": "니들링", "consultation": "상담", "clinic": "클리닉", "hospital": "병원", "Acro": "아크로", "diet": "다이어트", "capsule": "캡슐", "毛孔": "모공", "集中": "집중", "護膚": "스킨케어", "套裝": "세트", "療程": "프로그램", "婚禮": "웨딩", "輪廓線": "윤곽실", "鳳凰": "봉황", "電波拉提": "전파리프팅", "膠原": "콜라겐", "蛋白": "단백질", "除皺": "주름제거", "果酸": "AHA필링", "煥膚": "필링", "淨白": "미백", "保濕": "보습", "修復": "수복", "嫩膚": "피부재생", "逆齡": "안티에이징", "凍齡": "동안", "V臉": "V라인", "小V臉": "소V라인", "音波拉提": "초음파리프팅", "電波拉皮": "전파리프팅", "鳳凰電波": "봉황전파(써마지)", "海菲秀": "아쿠아필", "紧致": "탄력", "除皱": "주름제거", "专业": "전문", "咨询": "상담", "焕肤": "필링", "净白": "미백", "保湿": "보습", "修复": "수복", "嫩肤": "피부재생", "逆龄": "안티에이징", "冻龄": "동안", "小V脸": "소V라인", "超声提升": "초음파리프팅", "水光针": "물광주사", "光子嫩肤": "IPL", "点阵激光": "프락셀", "ฟิลเลอร์": "필러", "เมโสเธอราพี": "메조테라피", "ไฮฟู": "하이푸", "อัลเทร่า": "울쎄라", "เทอร์มาจ": "써마지", "ลดริ้วรอย": "주름개선", "กระชับรูขุมขน": "모공축소", "ผิวกระจ่างใส": "피부미백", "บำรุงผิว": "스킨케어", "ทรีทเม้นท์": "트리트먼트", "คลินิกความงาม": "뷰티클리닉", "ศัลยกรรมเสริมความงาม": "미용성형", "peel": "필링", "moisturizing": "보습", "anti-wrinkle": "주름방지", "V-line": "V라인", "face lift": "페이스리프트", "body contouring": "바디윤곽", "hair removal": "제모", "tattoo removal": "문신제거", "acne scar": "여드름흉터", "dark circle": "다크서클", "eye bag": "눈밑지방", "nose tip": "코끝", "bridge": "콧대", "alar": "콧날개", "forehead": "이마", "jaw reduction": "사각턱축소", "cheekbone reduction": "광대축소", "fat dissolution": "지방분해", "fat transfer": "지방이식", "dermal": "피부", "regeneration": "재생", "treatment": "치료", "program": "프로그램", "package": "패키지", "premium": "프리미엄", "special": "스페셜", "wedding": "웨딩", "bridal": "브라이덜", "glow": "글로우", "care": "관리", "intensive": "집중", "set": "세트"};
 
-// ===== STEP 3 — 타 시장 현황 (Snowflake 실데이터, 2025-10~2026-05) =====
-const donutColors=['#c0392b','#e07a5f','#e8b04b','#8e6fcf','#5b9aa0','#cbb8a8'];
-const markets=[
- {key:'tw',name:'대만',code:'TW',flag:'🇹🇼',line:'#e8833a',bar:'rgba(232,131,58,.18)',
-  mau:[12,20,46,63,71,86,91,100],su:[8,16,24,31,39,66,81,100],
-  stats:[['MAU','+53.6%','+731%','up','up'],['DB','+164%','+1222%','up','up']],
-  insight:'신규 진입 시장이지만 최근 8개월 MAU <b>+731%</b>, DB <b>+1,222%</b>로 폭발적으로 성장 중인 가장 가파른 시장입니다.',
-  donut:{labels:['리프팅','피부','보톡스','지방·다이어트','필러','기타'],values:[30.4,29.0,26.1,5.9,4.0,4.6]},
-  ev:{sub:'신규 급성장 · 리프팅·피부·보톡스 강세',cats:[
-    ['리프팅',['슈링크유니버스','온다리프팅','울쎄라리프팅','울쎄라피프라임','써마지리프팅','티타늄리프팅','윤곽주사','인모드리프팅','팔지방분해주사','허벅지지방분해주사']],
-    ['피부',['쥬베룩','리쥬란힐러','포텐자','써마지리프팅','리즈네','아쿠아필링','피코토닝','리쥬란HBPLUS','스킨보톡스','울쎄라리프팅']],
-    ['보톡스',['사각턱보톡스','얼굴지방분해주사','윤곽주사','팔지방분해주사','승모근보톡스','종아리지방분해주사','허벅지지방분해주사','복부지방분해주사','종아리보톡스','슈링크유니버스']],
-    ['지방·다이어트',['팔지방분해주사','복부지방분해주사','허벅지지방분해주사','부유방지방분해주사','옆구리지방분해주사','얼굴지방분해주사','종아리지방분해주사','등지방분해주사','승모근지방분해주사','복부냉각지방분해']],
-    ['필러',['턱필러','팔자주름필러','앞광대필러','이마필러','옆볼필러','입술필러','관자놀이필러','귀필러','풀페이스필러','볼필러']],
-    ['제모',['얼굴제모','겨드랑이제모','헤어라인제모','브라질리언제모','항문제모','비키니라인제모','다리제모','수염제모','이마제모','인중제모']],
-  ]}},
- {key:'jp',name:'일본',code:'JP',flag:'🇯🇵',line:'#c0392b',bar:'rgba(192,57,43,.18)',
-  mau:[76,71,72,79,74,84,95,100],su:[73,68,71,77,69,84,97,100],
-  stats:[['MAU','+24.1%','+31.8%','up','up'],['DB','+30.2%','+36.3%','up','up']],
-  insight:'규모가 가장 큰 성숙 시장으로, 최근 8개월에도 MAU <b>+31.8%</b>, DB <b>+36.3%</b>로 꾸준히 우상향하고 있습니다.',
-  donut:{labels:['피부','보톡스','리프팅','필러','지방·다이어트','기타'],values:[39.2,21.5,13.1,7.5,6.7,12.0]},
-  ev:{sub:'성숙 시장 · 피부·보톡스 강세',cats:[
-    ['피부',['IPL','루메카','필링','피코토닝','쥬베룩','포텐자','점제거시술','리쥬란힐러','피코프락셀','물광주사']],
-    ['보톡스',['사각턱보톡스','승모근보톡스','겨드랑이보톡스','종아리보톡스','침샘보톡스','팔뚝보톡스','미간보톡스','입꼬리보톡스','이마주름보톡스','목주름보톡스']],
-    ['리프팅',['인모드리프팅','고주파관리','온다리프팅','HIFU','실리프팅','티타늄리프팅','슈링크리프팅','볼뉴머리프팅','울쎄라리프팅','슈링크유니버스']],
-    ['필러',['팔자주름필러','턱필러','이마필러','입술필러','애교필러','볼필러','코필러','관자놀이필러','눈밑필러','입꼬리필러']],
-    ['지방·다이어트',['마운자로','얼굴지방분해주사','팔지방분해주사','복부지방분해주사','허벅지지방분해주사','등지방분해주사','종아리지방분해주사','옆구리지방분해주사','엉덩이지방분해주사','부유방지방분해주사']],
-    ['제모',['얼굴제모','브라질리언제모','젠틀맥스프로','겨드랑이제모','뒷목제모','음경제모','전신제모','목제모','엉덩이제모','팔제모']],
-  ]}},
- {key:'en',name:'영미',code:'EN',flag:'🌐',line:'#8e6fcf',bar:'rgba(142,111,207,.20)',
-  mau:[100,93,82,86,83,93,87,91],su:[74,78,69,76,72,97,100,100],
-  stats:[['MAU','+7.4%','-9.5%','up','down'],['DB','+37.3%','+35.4%','up','up']],
-  insight:'영어권(미국·영국·호주·캐나다 등) 시장으로, MAU는 보합이지만 DB는 최근 8개월 <b>+35.4%</b> 성장하며 전환 효율이 개선되고 있습니다.',
-  donut:{labels:['리프팅','피부','보톡스','지방·다이어트','필러','기타'],values:[29.6,26.6,22.6,6.4,4.5,10.3]},
-  ev:{sub:'리프팅·피부·보톡스 강세',cats:[
-    ['리프팅',['울쎄라리프팅','울쎄라피프라임','튠바디리프팅','복부지방분해주사','팔지방분해주사','허벅지지방분해주사','얼굴지방분해주사','티타늄리프팅','튠페이스리프팅','윤곽주사']],
-    ['피부',['리쥬란힐러','리쥬란아이','리쥬란HBPLUS','아쿠아필링','쥬베룩','피코토닝','포텐자','LDM','클라리티','레이저토닝']],
-    ['보톡스',['사각턱보톡스','얼굴지방분해주사','윤곽주사','승모근보톡스','팔지방분해주사','복부지방분해주사','허벅지지방분해주사','종아리지방분해주사','입꼬리보톡스','스킨보톡스']],
-    ['지방·다이어트',['팔지방분해주사','복부지방분해주사','허벅지지방분해주사','부유방지방분해주사','등지방분해주사','옆구리지방분해주사','종아리지방분해주사','얼굴지방분해주사','승모근지방분해주사','윤곽주사']],
-    ['필러',['입술필러','팔자주름필러','이마필러','턱필러','앞광대필러','입꼬리필러','코필러','턱끝필러','관자놀이필러','옆볼필러']],
-    ['제모',['얼굴제모','겨드랑이제모','브라질리언제모','헤어라인제모','종아리제모','비키니라인제모','젠틀맥스프로','인중제모','팔제모','다리제모']],
-  ]}},
- {key:'th',name:'태국',code:'TH',flag:'🇹🇭',line:'#3b9c5a',bar:'rgba(59,156,90,.18)',
-  mau:[92,69,87,93,71,100,88,94],su:[48,43,56,56,57,99,100,83],
-  stats:[['MAU','+12.1%','+2.1%','up','up'],['DB','+67.1%','+72.3%','up','up']],
-  insight:'MAU는 안정적으로 유지되는 가운데 DB가 최근 8개월 <b>+72.3%</b> 성장하며 상담 전환이 빠르게 늘고 있는 시장입니다.',
-  donut:{labels:['보톡스','리프팅','피부','필러','지방·다이어트','기타'],values:[35.3,26.4,26.4,6.9,3.4,1.6]},
-  ev:{sub:'보톡스·리프팅·피부 강세',cats:[
-    ['보톡스',['사각턱보톡스','얼굴지방분해주사','윤곽주사','입꼬리보톡스','이마주름보톡스','잔주름보톡스','스킨보톡스','승모근보톡스','눈가주름보톡스','허벅지지방분해주사']],
-    ['리프팅',['울쎄라리프팅','슈링크유니버스','울쎄라피프라임','아이슈링크','풀페이스리프팅','올리지오리프팅','인모드리프팅','온다리프팅','티타늄리프팅','윤곽주사']],
-    ['피부',['쥬베룩','리쥬란힐러','포텐자','울쎄라피프라임','물광주사','리쥬란HBPLUS','크라이오셀','리즈네','얼굴지방분해주사','티타늄리프팅']],
-    ['필러',['팔자주름필러','앞광대필러','옆볼필러','이마필러','턱필러','턱끝필러','관자놀이필러','볼필러','귀필러','코필러']],
-    ['지방·다이어트',['팔지방분해주사','허벅지지방분해주사','복부지방분해주사','얼굴지방분해주사','옆구리지방분해주사','종아리지방분해주사','부유방지방분해주사','등지방분해주사','윤곽주사','승모근지방분해주사']],
-    ['제모',['얼굴제모','겨드랑이제모','수염제모','브라질리언제모','인중제모','다리제모','턱제모','젠틀맥스프로','팔제모','종아리제모']],
-  ]}},
-];
-document.getElementById('step3').innerHTML=markets.map(m=>{
-  const leg=m.stats.map((r,i)=>legRow(m,r,i)).join('');
-  const evrows=m.ev.cats.map(([cat,items])=>{
-    const chips=items.map((it,i)=>'<span class="chip" style="background:#f5f1ec;color:#6f6157"><span class="rk">'+(i+1)+'</span>'+it+'</span>').join('');
-    return '<div class="cat-row"><div class="cat-lbl" style="--accent:'+m.line+';color:'+m.line+'">'+cat+'</div><div class="chips">'+chips+'</div></div>';
-  }).join('');
-  return '<div class="mkt-block"><div class="mkt-head"><span class="flag">'+m.flag+'</span>'+m.name+'<span class="mkt-sub2">'+m.ev.sub+'</span></div>'
-   +'<div class="ccard" style="--accent:'+m.line+'"><div class="chd"><div><div class="ctitle">'+m.name+'</div><div class="csub">'+m.code+' · MAU+DB</div></div><div class="clegend">'+leg+'<div class="cmonths"><span>최근3M</span><span>8M누적</span></div></div></div><div class="chart-wrap"><canvas id="s3_'+m.key+'"></canvas></div></div>'
-   +'<div class="insight" style="margin-top:12px"><b>핵심 요약</b> — '+m.insight+'</div>'
-   +'<div class="donut-box"><div class="donut-chart"><canvas id="s3d_'+m.key+'"></canvas></div><div class="donut-legend" id="s3l_'+m.key+'"></div></div>'
-   +'<div class="ev-card" style="--accent:'+m.line+'">'+evrows+'</div></div>';
-}).join('');
-markets.forEach(m=>{
-  new Chart(document.getElementById('s3_'+m.key),{data:{labels,datasets:[{type:'bar',label:'DB',data:m.su,backgroundColor:m.bar,borderColor:m.bar,borderRadius:3,barPercentage:.62,categoryPercentage:.78,yAxisID:'ySU',order:2},{type:'line',label:'MAU',data:m.mau,borderColor:m.line,backgroundColor:m.line,borderWidth:2.5,tension:.45,pointRadius:2,pointHoverRadius:5,pointBackgroundColor:m.line,yAxisID:'yMAU',order:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},events:[],scales:{x:{grid:{display:false},ticks:{maxRotation:45,minRotation:45,autoSkip:true,maxTicksLimit:5,color:'#aaa',font:{size:8}}},yMAU:{position:'left',grid:{color:'rgba(0,0,0,.05)'},ticks:{display:false},title:{display:true,text:'MAU',color:m.line,font:{size:9,weight:'700'}},min:0,max:110},ySU:{position:'right',grid:{display:false},ticks:{display:false},title:{display:true,text:'DB',color:'#aaa',font:{size:9,weight:'700'}},min:0,max:110}}}});
-  new Chart(document.getElementById('s3d_'+m.key),{type:'doughnut',data:{labels:m.donut.labels,datasets:[{data:m.donut.values,backgroundColor:donutColors,borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{display:false},tooltip:{enabled:false}},events:[]}});
-  document.getElementById('s3l_'+m.key).innerHTML=m.donut.labels.map((l,i)=>'<div class="dl-row"><span class="dl-dot" style="background:'+donutColors[i]+'"></span><span class="dl-nm">'+l+'</span><span class="dl-v">'+m.donut.values[i]+'%</span></div>').join('');
-});
-</script>
-</body>
-</html>
+// ===== STORAGE =====
+async function saveH(n,d){try{localStorage.setItem('hosp:'+n,JSON.stringify(d));return true;}catch(e){console.error('Save error:',e);return false;}}
+async function loadH(n){try{const r=localStorage.getItem('hosp:'+n);return r?JSON.parse(r):null;}catch(e){return null;}}
+async function delH(n){try{localStorage.removeItem('hosp:'+n);}catch(e){}}
+async function listH(){try{const keys=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('hosp:'))keys.push(k.replace('hosp:',''));}return keys;}catch(e){return[];}}
+// Shared tag data (stored once, used by all hospitals)
+function saveTag(tagData){try{localStorage.setItem('shared_tag',JSON.stringify(tagData));return true;}catch(e){return false;}}
+function loadTag(){try{const r=localStorage.getItem('shared_tag');return r?JSON.parse(r):null;}catch(e){return null;}}
+function hasTag(){return!!localStorage.getItem('shared_tag');}
+
+// ===== UTILS =====
+const fN=n=>n==null||isNaN(n)?"-":Math.round(n).toLocaleString("ko-KR");
+const fP=n=>n==null||isNaN(n)?"-":(n*100).toFixed(1)+"%";
+const fG=n=>{if(n==null||isNaN(n))return"-";const v=n.toFixed(1);return n>0?"+"+v+"%":v+"%"};
+const fM=m=>({"2026-01":"1월","2026-02":"2월","2026-03":"3월","2026-04":"4월","2026-05":"5월","2025-12":"12월"}[m]||m);
+const bg=n=>{if(n==null||isNaN(n))return"";return`<span class="B ${n>0?"u":n<0?"d":"f"}">${n>0?"▲":n<0?"▼":"→"} ${fG(n)}</span>`;};
+const bgInv=n=>{if(n==null||isNaN(n))return"";return`<span class="B ${n<0?"u":n>0?"d":"f"}">${n>0?"▲":n<0?"▼":"→"} ${fG(n)}</span>`;};
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const dim=m=>{const[y,mo]=m.split("-").map(Number);return new Date(y,mo,0).getDate()};
+const FL={"KR":"🇰🇷","TW":"🇹🇼","EN":"🇺🇸","TH":"🇹🇭","CN":"🇨🇳","JP":"🇯🇵"};
+const CL={"ALL":"전체","KR":"🇰🇷 한국","JP":"🇯🇵 일본","TW":"🇹🇼 대만","EN":"🇺🇸 영어","TH":"🇹🇭 태국","CN":"🇨🇳 중국"};
+
+// ===== LANGUAGE DETECTION (FIXED) =====
+function dlang(n){
+  n=String(n);
+  // Japanese: katakana or hiragana
+  if(/[\u30A0-\u30FF\u3040-\u309F]/.test(n))return"JP";
+  // Thai
+  if(/[\u0E00-\u0E7F]/.test(n))return"TH";
+  // Traditional Chinese (TW) - check for traditional-only characters and TW-specific words
+  const twChars=/[臉額頭雙體點麗龍風鳥魚黃齒齡醫國學車門開關圖書應選邊還運過連達適際電預題類發復繼續線網義習聯覽觀試認調講負資質輕轉農遞錢鋼長錄閒難飛驗區華結競穩稱種積確監當異產環營準殘歸歲標換損據擔歷強張帶導層屬備壓報則寫對從個動後態]/;
+  const twWords=/列印|臉部|雙眼皮|額頭|抽脂|縮小/;
+  if(twChars.test(n)||twWords.test(n))return"TW";
+  // Simplified Chinese (CN) - check for simplified-only characters and CN-specific words
+  const cnChars=/[脸额头双体点丽龙风鸟鱼黄齿龄医国学车门开关图书应选边还运过连达适际电预题类发复继续线网义习联览观试认调讲负资质轻转农递钱钢长录闲难飞验区华结竞稳称种积确监当异产环营准残归岁标换损据担历强张带导层属备压报则写对从个动后态缩吸]/;
+  const cnWords=/面部|吸脂|缩小|整形术/;
+  if(cnChars.test(n)||cnWords.test(n))return"CN";
+  // Any remaining CJK = CN default
+  if(/[\u4E00-\u9FFF]/.test(n))return"CN";
+  // English: no Korean chars + has Latin letters
+  if(!/[가-힣]/.test(n)&&/[A-Za-z]{2,}/.test(n))return"EN";
+  return"KR";
+}
+
+function autoTr(name){if(TR[name])return TR[name];let matches=[];for(const[k,v]of Object.entries(TR)){if(k.length>=2&&name.includes(k))matches.push({v,len:k.length});}matches.sort((a,b)=>b.len-a.len);let parts=[];for(const m of matches){if(!parts.some(p=>p.includes(m.v)))parts.push(m.v);}return parts.join(" ");}
+// Category mapping: group→top tag, category→top tag
+const CATMAP={"gt":{"바디제모":"겨드랑이제모","초음파지방분해":"종아리초음파지방분해","쌍꺼풀":"쌍꺼풀(자연유착)","얼굴필러":"입술필러","얼굴지방이식":"눈밑지방이식","여성성형":"소음순성형","안면거상":"안면거상술","코기능교정":"비후성비염수술","지방분해주사":"윤곽주사","실리프팅":"실리프팅","초음파리프팅":"슈링크유니버스","가슴모양교정":"가슴(보형물)","눈재수술":"눈재수술","코재수술":"코재수술","주름보톡스":"잔주름보톡스","눈모양교정":"눈매교정","얼굴지방흡입":"이중턱지방흡입","콧볼보톡스":"콧볼보톡스","바디지방흡입":"팔지방흡입","코끝교정":"코끝(자가연골)","필링":"아쿠아필링","콜라겐부스터":"콜라겐주사","스킨부스터":"쥬베룩","콧대교정":"콧대(자가조직)","니들고주파":"포텐자","가슴재수술":"가슴재수술","고주파리프팅":"인모드리프팅","근육보톡스":"사각턱보톡스","눈지방성형":"눈밑지방재배치","액취/다한증":"액취증(레이저)","트임":"앞트임","이마교정":"이마축소","색소/잡티토닝":"레이저토닝","코모양교정":"하이코","영양수액":"백옥주사","여유증치료":"여유증수술","극초단파리프팅":"온다리프팅","ECM부스터":"쥬브아셀","얼굴제모":"인중제모","광대교정":"광대축소(전체)","V라인 교정":"사각턱수술","양악":"양악수술","유두/유륜성형":"함몰유두교정"},"ct":{"제모":"인중제모","지방성형":"윤곽주사","눈성형":"쌍꺼풀(자연유착)","필러":"입술필러","기타":"문신제거","리프팅":"인모드리프팅","코성형":"코끝(자가연골)","안면윤곽/양악":"사각턱수술","가슴성형":"가슴(보형물)","보톡스":"사각턱보톡스","치아":"치아미백","피부":"쥬베룩","한방":"침술","모발이식":"머리모발이식"}};
+// Operation type: group→S(수술)/N(시술), category→S/N
+const OPMAP={"g":{"바디제모":"N","초음파지방분해":"N","쌍꺼풀":"S","얼굴필러":"N","얼굴지방이식":"S","여성성형":"N","안면거상":"S","체형윤곽성형":"S","코기능교정":"S","남성성형":"S","지방분해주사":"N","실리프팅":"N","관자놀이교정":"S","문신/반영구":"N","초음파리프팅":"N","가슴모양교정":"S","눈재수술":"S","광대교정":"S","코재수술":"S","냉각지방분해":"N","주름보톡스":"N","눈모양교정":"S","얼굴지방흡입":"S","입술성형":"S","바디지방흡입":"S","코끝교정":"S","필링":"N","레이저지방분해":"N","콜라겐부스터":"N","스킨부스터":"N","니들고주파":"N","가슴재수술":"S","고주파리프팅":"N","근육보톡스":"N","눈지방성형":"S","트임":"S","이마교정":"S","콧대교정":"S","코모양교정":"S","얼굴제모":"N","콧볼교정":"N","양악":"S","유두/유륜성형":"S","극초단파리프팅":"N","ECM부스터":"N","근육묶기":"S","콧날개교정":"S","바디거상":"S"},"c":{"제모":"N","지방성형":"N","눈성형":"S","필러":"N","기타":"N","리프팅":"N","코성형":"S","안면윤곽/양악":"S","가슴성형":"S","보톡스":"N","치아":"N","피부":"N","한방":"N","모발이식":"S"}};
+// Determine if an event is surgical(S) or non-surgical(N)
+function getOpType(evName){
+  // 1) Use findTagKw to get matched tag keyword
+  const kw=findTagKw(evName);
+  if(kw){
+    // 2) Reverse lookup: which CATMAP group has this tag as its top tag?
+    for(const[group,topTag]of Object.entries(CATMAP.gt)){
+      if(topTag===kw&&OPMAP.g[group])return OPMAP.g[group];
+    }
+    // 3) Check if tag keyword itself is a group name
+    if(OPMAP.g[kw])return OPMAP.g[kw];
+    // 4) Check if tag keyword contains a group name or vice versa
+    for(const[group,op]of Object.entries(OPMAP.g)){
+      if(kw.includes(group)||group.includes(kw))return op;
+    }
+    // 5) Check category level
+    for(const[cat,topTag]of Object.entries(CATMAP.ct)){
+      if(topTag===kw&&OPMAP.c[cat])return OPMAP.c[cat];
+    }
+  }
+  // 6) Keyword-based fallback from event name itself
+  const clean=evName.replace(/AI분석진단/gi,"").replace(/히트\s*/g,"").replace(/추가금\s*없는\s*/g,"").replace(/더나\s*/g,"").replace(/DERNA\s*/g,"").toLowerCase();
+  const surgical=["성형","수술","절개","재수술","거상","축소","확대","보형물","자가연골","트임","윤곽","양악","절골","지방흡입","liposuction","surgery","rhinoplasty","blepharoplasty","augmentation","reduction","revision","surgical"];
+  const nonsurgical=["리프팅","lifting","보톡스","botox","필러","filler","레이저","laser","토닝","toning","주사","injection","부스터","booster","스킨","skin","제모","필링","peeling","관리","care","수액","쥬베룩","리쥬란","포텐자","인모드","슈링크","울쎄라","써마지","온다","올리지오","oligio","ulthera","hifu","potenza","rejuran","thermage","thread","실리프팅","고주파","dissolving","contouring","non-surgical"];
+  let sScore=0,nScore=0;
+  for(const w of surgical){if(clean.includes(w))sScore++;}
+  for(const w of nonsurgical){if(clean.includes(w))nScore++;}
+  if(sScore>0&&nScore===0)return"S";
+  if(nScore>0&&sScore===0)return"N";
+  if(nScore>sScore)return"N";
+  if(sScore>nScore)return"S";
+  return"?";
+}
+
+function findTagKw(evName){
+  if(!D||!D.tag)return"";
+  const clean=evName.replace(/AI분석진단/gi,"").replace(/히트\s*/g,"").replace(/추가금\s*없는\s*/g,"").replace(/더나\s*/g,"").replace(/DERNA\s*/g,"").trim();
+  const tagKeys=Object.keys(D.tag);let best="",bL=0;
+  // ① Direct longest substring
+  for(const kw of tagKeys){if(kw.length>=2&&clean.includes(kw)&&kw.length>bL){best=kw;bL=kw.length;}}
+  if(best)return best;
+  // ② Space-removed
+  const cNS=clean.replace(/\s+/g,"");
+  for(const kw of tagKeys){if(kw.length>=2&&cNS.includes(kw.replace(/\s+/g,""))&&kw.length>bL){best=kw;bL=kw.length;}}
+  if(best)return best;
+  // ③ Word = tag keyword
+  const words=clean.replace(/[,/_·x]/g," ").split(/\s+/).filter(p=>p.length>=2);
+  for(const w of words){if(tagKeys.includes(w))return w;}
+  // ④ Group name match (min 3 chars overlap)
+  let bestGL=0;best="";
+  for(const w of words){for(const[g,t]of Object.entries(CATMAP.gt)){
+    if(g.length<3)continue;
+    if(g.includes(w)&&w.length>=3&&w.length>bestGL){best=t;bestGL=w.length;}
+    if(w.includes(g)&&g.length>bestGL){best=t;bestGL=g.length;}}}
+  if(best&&bestGL>=3)return best;
+  // ⑤ Category name match
+  best="";bL=0;
+  for(const w of words){for(const[c,t]of Object.entries(CATMAP.ct)){
+    if(c.includes(w)&&w.length>=3&&w.length>bL){best=t;bL=w.length;}
+    if(w.includes(c)&&c.length>=2&&c.length>bL){best=t;bL=c.length;}}}
+  if(best)return best;
+  // ⑥ Multi-word scoring: tag with most event-word matches
+  let bestScore=0;best="";
+  for(const kw of tagKeys){let score=0;for(const w of words){if(w.length>=2&&kw.includes(w))score+=w.length;}
+    if(score>bestScore){bestScore=score;best=kw;}}
+  if(best&&bestScore>=3)return best;
+  // ⑦ Substring decomposition: try 3+ char substrings, prefer shortest (most specific) tag
+  for(const w of words){if(w.length<4)continue;
+    for(let len=w.length;len>=3;len--){for(let i=0;i<=w.length-len;i++){
+      const sub=w.slice(i,i+len);let bTag="",bTL=9999;
+      for(const kw of tagKeys){if(kw.includes(sub)&&kw.length<bTL){bTag=kw;bTL=kw.length;}}
+      if(bTag)return bTag;}}}
+  // ⑧ Manual fallback for keywords not in tag/category data
+  const FB={"염증":"여드름주사","여드름":"여드름압출","모공":"아쿠아필링","탄력":"콜라겐주사","수분":"물광주사","재생":"PRP피부재생술","미백":"레이저토닝","기미":"레이저토닝","색소":"레이저토닝","턱끝":"턱끝보톡스","이중턱":"이중턱지방흡입","팔자":"팔자주름필러","귀족":"귀족수술(보형물)","다이어트":"다이어트한약","체형":"윤곽주사","동안":"콜라겐주사","안티에이징":"콜라겐주사","볼처짐":"안면거상술","처짐":"실리프팅","스킨케어":"아쿠아필링","피부관리":"아쿠아필링","흉터":"흉터제거레이저","켈로이드":"캘로이드주사","제모":"겨드랑이제모","문신":"문신제거","반영구":"문신제거","치아":"치아미백","hair":"머리모발이식","acne":"여드름압출","pore":"아쿠아필링","whitening":"레이저토닝","aging":"콜라겐주사","diet":"다이어트한약","scar":"흉터제거레이저"};
+  for(const w of words){for(const[k,v]of Object.entries(FB)){if(w.includes(k)||k.includes(w)){if(D.tag[v])return v;}}}
+  return"";
+}
+function mkSVG(kw){
+  try{if(!D||!D.tag)return"";const tr=D.tag[kw];if(!tr)return"";
+  // Only use months up to and including the base month (S.lm)
+  const ks=Object.keys(tr).sort().filter(k=>k<=S.lm).slice(-4);if(ks.length<2)return"";
+  const lastDataMonth=D.months[D.months.length-1];
+  const vs=ks.map(k=>{let v=tr[k];if(S.proj&&k===lastDataMonth&&isP(k,S.mktE))v=prj(v,S.mktE,k);return v;});
+  const g=vs[vs.length-2]>0?(vs[vs.length-1]-vs[vs.length-2])/vs[vs.length-2]*100:0;
+  const mx=Math.max(...vs),mn=Math.min(...vs),r=mx-mn||1,col=g>=0?"#059669":"#dc2626";
+  const pts=vs.map((v,i)=>(i/(vs.length-1))*40+","+(14-((v-mn)/r)*12)).join(" ");
+  return`<svg width="44" height="18" viewBox="0 0 44 18" style="vertical-align:middle;margin-right:3px"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2" stroke-linecap="round"/></svg><span style="font-size:9px;font-weight:600;font-family:'JetBrains Mono';color:${col}">${fG(g)}</span>`;}catch(e){return"";}
+}
+
+// ===== STATE =====
+let D=null,savedList=[],isDirty=false;
+// Auto-calculate elapsed days from today's date
+function autoElapsed(){const d=new Date();return Math.max(1,d.getDate()-1);}
+let S={scr:"home",tab:"overview",co:new Set(["ALL"]),sort:"db",exp:new Set(),proj:true,cpvE:autoElapsed(),mktE:autoElapsed(),ch:{},hn:"",statusMsg:"",statusType:"",files:{cpv:null,cpc:null,tag:null},showTr:false,showComments:false,showCPA:true,showOV:true,momDetail:new Set(),momMonths:3,opFilter:"ALL",baseMo:null};
+function coMatch(lang){return S.co.has("ALL")||S.co.has(lang);}
+function init(){if(!D)return;
+  const allMs=D.months;
+  // baseMo = analysis target month. Only show data up to this month.
+  if(!S.baseMo||!allMs.includes(S.baseMo))S.baseMo=allMs[allMs.length-1];
+  const bi=allMs.indexOf(S.baseMo);
+  S.ms=allMs.slice(0,bi+1);
+  S.lm=S.baseMo;S.L=S.ms.length-1;S.P=S.ms.length-2;
+  // Projection applies only to baseMo if it's the actual last data month
+  S.projMonth=allMs[allMs.length-1];
+  D.events.forEach(ev=>{ev.l=dlang(ev.n);});
+}
+const isP=(m,el)=>m===S.lm&&el<dim(m);
+const prj=(v,el,m)=>{const d=dim(m);return(!el||el>=d)?v:Math.round(v/el*d)};
+function evCPV(ev,m){const r=ev.m[m]||[0,0,0];let[v,d,c]=r;if(S.proj&&isP(m,S.cpvE)){v=prj(v,S.cpvE,m);d=prj(d,S.cpvE,m);c=prj(c,S.cpvE,m);}return{v,d,c};}
+function evCPC(n,m){const cd=D.cpc[n];if(!cd)return{cl:0,cn:0,tc:0};const x=cd[m];if(!x)return{cl:0,cn:0,tc:0};return{cl:x[1],cn:x[5],tc:x[4]};}
+function evT(ev,m){const cpv=evCPV(ev,m),cpc=evCPC(ev.n,m);const td=cpv.d+cpc.cn,tc=cpv.c+cpc.tc;return{v:cpv.v,d:td,c:tc,cpa:td>0?tc/td:0,r:cpv.v>0?td/cpv.v:0,cpvD:cpv.d,cpcD:cpc.cn};}
+function mTot(m,co){let v=0,d=0,c=0;D.events.forEach(ev=>{if(co instanceof Set){if(!co.has("ALL")&&!co.has(ev.l))return;}else{if(co!=="ALL"&&ev.l!==co)return;}const t=evT(ev,m);v+=t.v;d+=t.d;c+=t.c;});return{v,d,c,cpa:d>0?c/d:0,r:v>0?d/v:0};}
+function cpvMTot(m,co){let v=0,d=0,c=0;D.events.forEach(ev=>{if(co instanceof Set){if(!co.has("ALL")&&!co.has(ev.l))return;}else{if(co!=="ALL"&&ev.l!==co)return;}const t=evCPV(ev,m);v+=t.v;d+=t.d;c+=t.c;});return{v,d,c,cpa:d>0?c/d:0};}
+function cpcMT(m,co){let cl=0,cn=0,tc=0;Object.entries(D.cpc).forEach(([name,e])=>{const l=dlang(name);if(co instanceof Set){if(!co.has("ALL")&&!co.has(l))return;}else{if(co&&co!=="ALL"&&l!==co)return;}const x=e[m];if(x){cl+=x[1];cn+=x[5];tc+=x[4];}});return{cl,cn,tc,cpa:cn>0?tc/cn:0};}
+
+// ===== FILE PARSE =====
+function parseFiles(){
+  return new Promise((res,rej)=>{
+    if(!S.files.cpv)return rej("CPV 파일 필요");
+    const rd=f=>new Promise(r=>{const fr=new FileReader();fr.onload=e=>r(new Uint8Array(e.target.result));fr.readAsArrayBuffer(f);});
+    Promise.all([rd(S.files.cpv),S.files.cpc?rd(S.files.cpc):null,S.files.tag?rd(S.files.tag):null]).then(([cpvB,cpcB,tagB])=>{
+      const cpvW=XLSX.read(cpvB,{type:"array"}),cpvS=cpvW.Sheets[cpvW.SheetNames[0]],cpvJ=XLSX.utils.sheet_to_json(cpvS,{header:1});
+      const mcs=[];cpvJ[0].forEach((v,i)=>{if(v&&String(v).match(/\d{2}\.\d{2}\.\d{2}/)){const p=String(v).split(".");mcs.push({col:i,mo:"20"+p[0]+"-"+p[1].padStart(2,"0")});}});
+      const mos=mcs.map(m=>m.mo),evts=[];
+      for(let r=2;r<cpvJ.length;r++){const nm=String(cpvJ[r][0]||"").trim();if(!nm||nm==="총합계")continue;
+        const md={};mcs.forEach(mc=>{md[mc.mo]=[Number(cpvJ[r][mc.col])||0,Number(cpvJ[r][mc.col+1])||0,Number(cpvJ[r][mc.col+4])||0];});
+        evts.push({n:nm,l:dlang(nm),m:md});}
+      const cpcE={};
+      if(cpcB){const cW=XLSX.read(cpcB,{type:"array"}),cS=cW.Sheets[cW.SheetNames[0]],cJ=XLSX.utils.sheet_to_json(cS);
+        let curMo=null;cJ.forEach(row=>{const p=String(row['매출/SU 기간']||'');const pm=p.match(/(\d{4})\.\s*(\d+)/);if(pm)curMo=pm[1]+"-"+pm[2].padStart(2,"0");
+          const ev=String(row['이벤트 제목']||'').trim();if(!ev||ev==='총계'||!curMo)return;
+          if(!cpcE[ev])cpcE[ev]={};cpcE[ev][curMo]=[+row['광고 조회수']||0,+row['총 클릭수']||0,+row['광고 클릭률']||0,+row['CPC']||0,+row['총 광고비']||0,+row['전환수']||0,+row['전환가치']||0];});}
+      let tagMap=null;
+      if(tagB){const tW=XLSX.read(tagB,{type:"array"}),tS=tW.Sheets[tW.SheetNames[0]],tJ=XLSX.utils.sheet_to_json(tS);
+        tagMap={};tJ.forEach(row=>{const kw=String(row['분석 단위']||'').trim();if(!kw)return;const td={};
+          Object.keys(row).filter(k=>k!=='분석 단위').forEach(col=>{const cm=col.match(/(\d{4})\.\s*(\d+)/);if(cm)td[cm[1]+"-"+cm[2].padStart(2,"0")]=Number(row[col])||0;});tagMap[kw]=td;});}
+      res({hospital:S.hn||"병원",months:mos,events:evts,cpc:cpcE,tag:tagMap});
+    }).catch(rej);});
+}
+
+// ===== RENDER =====
+async function R(){if(S.scr==="home")return rHome();if(!D)return;init();rDash();}
+
+async function rHome(){
+  savedList=await listH();const f=S.files;
+  let h=`<div class="home"><div style="font-size:10px;color:#6366f1;font-weight:700;letter-spacing:2px;margin-bottom:6px">HOSPITAL REPORT</div><h1>병원 성과 리포트</h1><p class="desc">파일 업로드 → 대시보드 자동 생성 · 병원별 데이터 저장</p>`;
+  h+=`<div style="font-size:11px;margin-bottom:16px;padding:6px 14px;border-radius:8px;background:${hasTag()?'#ecfdf5;color:#059669;border:1px solid #a7f3d0':'#fef2f2;color:#dc2626;border:1px solid #fecaca'}">${hasTag()?'📈 시장 트렌드 데이터 저장됨 (모든 병원 공통 적용)':'📈 태그SU 트렌드를 한 번 업로드하면 모든 병원에 자동 적용됩니다'}</div>`;
+  if(savedList.length){h+=`<div style="font-size:12px;font-weight:700;margin-bottom:10px;width:100%;max-width:700px;text-align:left">💾 저장된 병원 (${savedList.length})</div><div class="saved-grid">`;
+    savedList.forEach(n=>{h+=`<div class="saved-card" onclick="loadSaved('${esc(n)}')"><div class="sc-del" onclick="event.stopPropagation();delSaved('${esc(n)}')" title="삭제">✕</div><div class="sc-name">${esc(n)}</div><div style="font-size:10px;color:#9ca3af">클릭하여 열기</div></div>`;});
+    h+=`</div><div class="or-divider">또는 새 데이터 업로드</div>`;}
+  if(S.statusMsg)h+=`<div class="status ${S.statusType}">${S.statusMsg}</div>`;
+  h+=`<input class="hinp" id="hn" placeholder="병원명 입력" value="${esc(S.hn)}"><div class="ugrid">`;
+  [{k:"cpv",i:"📊",t:"CPV",d:"일반광고",r:1},{k:"cpc",i:"🔍",t:"CPC",d:"검색광고"},{k:"tag",i:"📈",t:"태그SU",d:"시장 트렌드"}].forEach(u=>{
+    const ok=!!f[u.k];h+=`<div class="ubox ${ok?"ok":""}" onclick="document.getElementById('f_${u.k}').click()"><div class="ic">${u.i}</div><div class="ut">${u.t}${u.r?' <span style="color:#dc2626">*</span>':""}</div><div class="ud">${u.d}</div>${ok?`<div class="uf">✓ ${esc(f[u.k].name)}</div>`:""}<input type="file" id="f_${u.k}" accept=".xlsx,.xls" onchange="onFile('${u.k}',this)"></div>`;});
+  h+=`</div><button class="gbtn" id="gb" ${f.cpv?"":"disabled"} onclick="gen()">리포트 생성</button>
+  <div style="display:flex;gap:8px;margin-top:12px">
+  <button style="background:#fff;border:1px solid #e5e7eb;color:#6b7280;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR';font-size:11px" onclick="loadSampleData()">히트성형외과 샘플</button>
+  <label style="background:#fff;border:1px solid #6366f1;color:#6366f1;padding:8px 18px;border-radius:8px;cursor:pointer;font-family:'Noto Sans KR';font-size:11px;font-weight:600">📦 JSON 가져오기<input type="file" accept=".json" style="display:none" onchange="importJSON(this)"></label>
+  </div></div>`;
+  document.getElementById("app").innerHTML=h;
+  document.getElementById("hn")?.addEventListener("input",e=>{S.hn=e.target.value;});
+}
+
+function rDash(){
+  const co=S.co,ms=S.ms,lm=S.lm,l3=ms.slice(-3);
+  let h=`<button class="bbtn" onclick="goHome()">← 병원 목록</button>`;
+  h+=`<div class="hdr"><div><div style="font-size:10px;color:#6366f1;font-weight:700;letter-spacing:2px">PERFORMANCE REPORT</div><h1>${esc(D.hospital)}</h1><div style="font-size:11px;color:#9ca3af;margin-top:2px">${fM(ms[0])} ~ ${fM(lm)} ${D.tag?`· 📈 시장 ${Object.keys(D.tag).length}개 키워드`:"· <span style='color:#ef4444'>⚠️ 태그SU 없음</span>"}</div></div><div style="display:flex;gap:8px;align-items:center"><button onclick="exportPDF()" style="padding:7px 12px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#6b7280;font-size:11px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR'">📄 PDF</button><button onclick="copyShareLink()" style="padding:7px 12px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#6b7280;font-size:11px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR'">🔗 링크</button><button onclick="exportJSON()" style="padding:7px 12px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#6b7280;font-size:11px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR'">📦 내보내기</button><button onclick="saveCurrent()" style="padding:7px 16px;border-radius:8px;border:1px solid ${isDirty?"#6366f1":"#e5e7eb"};background:${isDirty?"#6366f1":"#fff"};color:${isDirty?"#fff":"#6b7280"};font-size:11px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR'">💾 ${isDirty?"저장하기":"저장됨"}</button></div></div>`;
+  h+=`<div class="ctrl"><label class="tg"><input type="checkbox" id="pt" ${S.proj?"checked":""} onchange="S.proj=this.checked;R()"><span class="tk"></span><span style="font-size:10px;color:#6b7280">예상실적 보정</span></label><div class="dv"></div><div class="cg"><span class="cl">병원</span><input type="number" class="ni" id="ce" value="${S.cpvE}" min="1" max="31"><span class="cl">일</span></div><div class="cg"><span class="cl">시장</span><input type="number" class="ni" id="me" value="${S.mktE}" min="1" max="31"><span class="cl">일</span></div><div class="dv"></div><div class="cg"><span class="cl">기준월</span><select class="ni" style="width:auto;padding:3px 6px;font-size:10px" onchange="S.baseMo=this.value;R()">${D.months.map(m=>`<option value="${m}" ${m===S.baseMo?"selected":""}>${fM(m)}</option>`).join("")}</select></div><div class="dv"></div><div class="cg"><span class="cl">MOM</span><input type="number" class="ni" id="momM" value="${S.momMonths}" min="2" max="${ms.length}" style="width:32px"><span class="cl">개월</span></div><div class="dv"></div><label class="tg"><input type="checkbox" id="trToggle" ${S.showTr?"checked":""} onchange="S.showTr=this.checked;R()"><span class="tk"></span><span style="font-size:10px;color:#6b7280">번역 보기</span></label><div class="dv"></div><label class="tg"><input type="checkbox" ${!S.showCPA?"checked":""} onchange="S.showCPA=!this.checked;R()"><span class="tk"></span><span style="font-size:10px;color:#6b7280">병원용</span></label><div class="dv"></div><span onclick="document.getElementById('tagUp').click()" style="font-size:10px;color:${D.tag?'#059669':'#dc2626'};cursor:pointer;font-weight:600">${D.tag?'📈 시장데이터 ✓':'📈 태그SU 업로드'}</span><input type="file" id="tagUp" accept=".xlsx,.xls" style="display:none" onchange="onTagUpload(this)"></div>`;
+  h+=`<div class="tabs">${[["overview","종합"],["events","이벤트별"],["cpc","CPC"],["mom","MOM"]].map(([k,l])=>`<button class="tb ${S.tab===k?"a":""}" onclick="SS({tab:'${k}'})">${l}</button>`).join("")}</div>`;
+  if(S.tab!=="cpc"){const cs=["ALL",...new Set(D.events.map(e=>e.l))];h+=`<div class="cf">${cs.map(c=>`<button class="cb ${co.has(c)?"a":""}" onclick="toggleCo('${c}')">${CL[c]||c}</button>`).join("")}</div>`;}
+
+  // ===== OVERVIEW =====
+  if(S.tab==="overview"){
+    const cur=mTot(lm,co),prev=mTot(ms[S.P],co);
+    const gV=prev.v?(cur.v-prev.v)/prev.v*100:0,gD=prev.d?(cur.d-prev.d)/prev.d*100:0,gCPA=prev.cpa?(cur.cpa-prev.cpa)/prev.cpa*100:0;
+    const cardCount=(S.showOV?1:0)+1+1+(S.showCPA?1:0)+1;
+    h+=`<div class="grid" style="grid-template-columns:repeat(${cardCount},1fr);gap:10px;margin-bottom:14px">${S.showOV?`<div class="card"><div class="kl">${fM(lm)} 조회수</div><div class="kv">${fN(cur.v)}</div><div class="kf">${bg(gV)} 전월비</div></div>`:""}<div class="card"><div class="kl">총 DB</div><div class="kv">${fN(cur.d)}</div><div class="kf">${bg(gD)} 전월비</div></div><div class="card"><div class="kl">전환율</div><div class="kv">${fP(cur.r)}</div><div class="kf">${prev.r?bg((cur.r-prev.r)/prev.r*100):""} 전월비</div></div>${S.showCPA?`<div class="card"><div class="kl">DB당 투자비용</div><div class="kv" style="color:#0891b2">₩${fN(cur.cpa)}</div><div class="kf">${bgInv(gCPA)} ${cur.cpa<prev.cpa?"개선↓":"악화↑"}</div></div>`:""}<div class="card"><div class="kl">총 광고비</div><div class="kv" style="font-size:18px">₩${fN(cur.c)}</div><div class="kf">${prev.c?bg((cur.c-prev.c)/prev.c*100):""} 전월비</div></div></div>`;
+    // Charts and diagnosis moved to new section below KPI cards
+    // Diagnosis
+    const diag=D.events.filter(e=>coMatch(e.l)).map(e=>{const c2=evT(e,lm),p2=evT(e,ms[S.P]);const cpvC=evCPV(e,lm),cpvP=evCPV(e,ms[S.P]);const dG=p2.d>0?(c2.d-p2.d)/p2.d*100:c2.d>0?999:0;const vG=cpvP.v>0?(cpvC.v-cpvP.v)/cpvP.v*100:0;const curR=cpvC.v>0?c2.d/cpvC.v:0,prevR=cpvP.v>0?p2.d/cpvP.v:0;const rG=prevR>0?(curR-prevR)/prevR*100:0;let cause="";if(Math.abs(dG)<5)cause="안정";else if(dG>0)cause=vG>rG?"조회수↑":"전환율↑";else cause=vG<rG?"조회수↓":"전환율↓";return{...e,cur:c2,prev:p2,dG,cause};}).filter(e=>e.cur.d>0||e.dG!==0);
+    const rising=diag.filter(e=>e.dG>5).sort((a,b)=>b.dG-a.dG),falling=diag.filter(e=>e.dG<-5).sort((a,b)=>a.dG-b.dG);
+    // ===== YoY / MoM KPI cards =====
+    const yoyMonth=S.ms.find(m=>{const[y,mo]=m.split("-");return(+y-1)+"-"+mo===ms.find(pm=>pm===(+y-1)+"-"+mo);});
+    // Find YoY pairs: for each recent month, find same month last year
+    const recentMs=ms.slice(-4);
+    h+=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div class="st2" style="margin:0">📊 성과 요약</div><div class="cf" style="margin:0">${["mom:전월비","yoy:전년비","both:전월+전년"].map(s=>{const[k,l]=s.split(":");return`<button class="cb ${(S.kpiMode||"mom")===k?"a":""}" onclick="SS({kpiMode:'${k}'})">${l}</button>`;}).join("")}</div></div>`;
+    h+=`<div class="grid g4" style="margin-bottom:14px">`;
+    recentMs.forEach(m=>{
+      const t=mTot(m,co);
+      const mi=ms.indexOf(m);const prevM=mi>0?ms[mi-1]:null;const momT2=prevM?mTot(prevM,co):{d:0,v:0,c:0};
+      const[y,mo]=m.split("-");const yoyM=(+y-1)+"-"+mo;const yoyT=mTot(yoyM,co);
+      const momD=momT2.d?bg((t.d-momT2.d)/momT2.d*100):"";
+      const yoyD=yoyT.d?bg((t.d-yoyT.d)/yoyT.d*100):"";
+      const momV=momT2.v?bg((t.v-momT2.v)/momT2.v*100):"";
+      const yoyV=yoyT.v?bg((t.v-yoyT.v)/yoyT.v*100):"";
+      const momC=momT2.c?bg((t.c-momT2.c)/momT2.c*100):"";
+      const yoyC=yoyT.c?bg((t.c-yoyT.c)/yoyT.c*100):"";
+      const mode=S.kpiMode||"mom";
+      h+=`<div class="card" ${m===lm?'style="border:2px solid #6366f1"':''}>`;
+      // OV row
+      if(S.showOV){
+        h+=`<div class="kl">${fM(m)} 조회수</div><div style="font-size:22px;font-weight:800;font-family:'JetBrains Mono';letter-spacing:-1px;margin:2px 0;color:#6366f1">${fN(t.v)}</div>`;
+        if(mode==="mom")h+=`<div class="kf" style="font-size:10px">${momV} 전월비</div>`;
+        else if(mode==="yoy")h+=`<div class="kf" style="font-size:10px">${yoyV} 전년비</div>`;
+        else h+=`<div class="kf" style="font-size:10px">${momV} <span style="color:#9ca3af">전월</span> ${yoyV} <span style="color:#9ca3af">전년</span></div>`;
+        h+=`<div style="height:1px;background:#e5e7eb;margin:6px 0"></div>`;
+      }
+      // DB row
+      h+=`<div class="kl">${S.showOV?"":""+fM(m)+" "}DB</div><div style="font-size:${S.showOV?'22':'28'}px;font-weight:900;font-family:'JetBrains Mono';letter-spacing:-1px;margin:2px 0">${fN(t.d)}<span style="font-size:12px;color:#9ca3af;font-weight:500">명</span></div>`;
+      if(mode==="mom")h+=`<div class="kf" style="font-size:10px">${momD} 전월비</div>`;
+      else if(mode==="yoy")h+=`<div class="kf" style="font-size:10px">${yoyD} 전년비</div>`;
+      else h+=`<div class="kf" style="font-size:10px">${momD} <span style="color:#9ca3af">전월</span> ${yoyD} <span style="color:#9ca3af">전년</span></div>`;
+      h+=`<div style="font-size:9px;color:#9ca3af;margin-top:3px">CVR ${fP(t.r)}</div>`;
+      // 광고비 row
+      h+=`<div style="height:1px;background:#f3f4f6;margin:4px 0"></div>`;
+      h+=`<div style="font-size:9px;color:#6b7280;margin-top:2px">광고비 <strong style="font-family:'JetBrains Mono';color:#374151">₩${fN(t.c)}</strong> `;
+      if(mode==="mom")h+=momC;
+      else if(mode==="yoy")h+=yoyC;
+      else h+=`${momC} ${yoyC}`;
+      h+=`</div></div>`;
+    });
+    h+=`</div>`;
+
+    // ===== 국가별 DB 비중 =====
+    const countries=[...new Set(D.events.map(e=>e.l))];
+    if(countries.length>1){
+      const countryDB=countries.map(c=>{let d=0;D.events.forEach(ev=>{if(ev.l===c)d+=evT(ev,lm).d;});return{c,d};}).filter(x=>x.d>0).sort((a,b)=>b.d-a.d);
+      const totalDB=countryDB.reduce((s,x)=>s+x.d,0);
+      h+=`<div class="CC" style="margin-bottom:14px"><h3>🌏 국가별 DB 비중 (${fM(lm)})</h3><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px;height:180px"><canvas id="cPie"></canvas></div>
+      <div style="flex:1;min-width:200px">`;
+      countryDB.forEach(x=>{const pct=(x.d/totalDB*100).toFixed(1);
+        h+=`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #f9fafb"><span style="font-size:10px;font-weight:600;min-width:70px">${CL[x.c]||x.c}</span><div style="flex:1;height:8px;background:#f3f4f6;border-radius:4px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${({"KR":"#6366f1","JP":"#f59e0b","EN":"#10b981","TW":"#ec4899","TH":"#f97316","CN":"#ef4444"})[x.c]||"#9ca3af"};border-radius:4px"></div></div><span style="font-size:11px;font-weight:700;font-family:'JetBrains Mono';min-width:60px;text-align:right">${fN(x.d)}명</span><span style="font-size:10px;color:#6b7280;min-width:40px;text-align:right">${pct}%</span></div>`;});
+      h+=`</div></div></div>`;
+    }
+
+    h+=`<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px"><label class="tg"><input type="checkbox" ${S.showOV?"checked":""} onchange="S.showOV=this.checked;R()"><span class="tk"></span><span style="font-size:10px;color:#6b7280">조회수</span></label></div>`;
+    h+=`<div class="grid g2" style="margin-bottom:14px"><div class="CC"><h3>📊 월별 ${S.showOV?"조회수 & ":""}DB</h3><div class="CH"><canvas id="c1"></canvas></div></div>${S.showCPA?`<div class="CC"><h3>💰 DB당 투자비용 추이</h3><div class="CH"><canvas id="c2"></canvas></div></div>`:`<div class="CC"><h3>📈 월별 전환율 추이</h3><div class="CH"><canvas id="cCvr"></canvas></div></div>`}</div>`;
+
+    // ===== 성장·신규 이벤트 / 점검 필요 이벤트 =====
+    h+=`<div class="grid g2">`;
+    // Growth / New
+    const growthEvs=diag.filter(e=>e.dG>0||e.prev.d===0&&e.cur.d>0).sort((a,b)=>{
+      if(a.prev.d===0&&a.cur.d>0&&!(b.prev.d===0&&b.cur.d>0))return -1;
+      if(b.prev.d===0&&b.cur.d>0&&!(a.prev.d===0&&a.cur.d>0))return 1;
+      return(b.cur.d-b.prev.d)-(a.cur.d-a.prev.d);
+    });
+    const alertEvs=diag.filter(e=>e.dG<0&&e.prev.d>0).sort((a,b)=>(a.cur.d-a.prev.d)-(b.cur.d-b.prev.d));
+
+    h+=`<div class="card" style="border-left:3px solid #059669"><div style="font-size:13px;font-weight:700;color:#059669;margin-bottom:8px">📈 성장·신규 이벤트</div>`;
+    growthEvs.slice(0,6).forEach(ev=>{
+      const isNew=ev.prev.d===0&&ev.cur.d>0;
+      const diff=ev.cur.d-ev.prev.d;
+      const prevR=ev.prev.v>0?ev.prev.d/ev.prev.v:0,curR=ev.cur.v>0?ev.cur.d/ev.cur.v:0;
+      const rChg=prevR>0?`${fP(prevR)}→${fP(curR)}`:`CVR ${fP(curR)}`;
+      const isKR=ev.l==="KR",tr=isKR?"":autoTr(ev.n);
+      h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f3f4f6">
+        <div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:600"><span class="fl fl-${ev.l}">${FL[ev.l]||""}</span>${esc(ev.n.slice(0,25))}${!isKR&&tr&&S.showTr?` <span style="font-size:9px;color:#6366f1">→${esc(tr.slice(0,15))}</span>`:""}</div>
+        <div style="font-size:9px;color:#9ca3af;margin-top:1px">${rChg}</div></div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          ${isNew?`<span style="font-size:12px;font-weight:800;font-family:'JetBrains Mono';color:#059669">${fN(ev.cur.d)}명</span><span style="font-size:9px;padding:2px 8px;border-radius:10px;background:#dcfce7;color:#059669;font-weight:700">신규</span>`:`<span style="font-size:11px;font-family:'JetBrains Mono';color:#6b7280">${fN(ev.prev.d)}→<strong style="color:#059669">${fN(ev.cur.d)}</strong></span><span style="font-size:10px;font-weight:700;color:#059669;font-family:'JetBrains Mono'">(+${fN(diff)})</span>`}
+        </div></div>`;});
+    if(!growthEvs.length)h+=`<div style="color:#9ca3af;font-size:11px">없음</div>`;
+    h+=`</div>`;
+
+    // Alert
+    h+=`<div class="card" style="border-left:3px solid #dc2626"><div style="font-size:13px;font-weight:700;color:#dc2626;margin-bottom:8px">📉 점검 필요 이벤트</div>`;
+    alertEvs.slice(0,6).forEach(ev=>{
+      const diff=ev.cur.d-ev.prev.d;
+      const prevR=ev.prev.v>0?ev.prev.d/ev.prev.v:0,curR=ev.cur.v>0?ev.cur.d/ev.cur.v:0;
+      const rChg=prevR>0?`${fP(prevR)}→${fP(curR)}`:`CVR ${fP(curR)}`;
+      const isKR=ev.l==="KR",tr=isKR?"":autoTr(ev.n);
+      h+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #f3f4f6">
+        <div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:600"><span class="fl fl-${ev.l}">${FL[ev.l]||""}</span>${esc(ev.n.slice(0,25))}${!isKR&&tr&&S.showTr?` <span style="font-size:9px;color:#6366f1">→${esc(tr.slice(0,15))}</span>`:""}</div>
+        <div style="font-size:9px;color:#9ca3af;margin-top:1px">${rChg}</div></div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <span style="font-size:11px;font-family:'JetBrains Mono';color:#6b7280">${fN(ev.prev.d)}→<strong style="color:#dc2626">${fN(ev.cur.d)}</strong></span><span style="font-size:10px;font-weight:700;color:#dc2626;font-family:'JetBrains Mono'">(${fN(diff)})</span>
+        </div></div>`;});
+    if(!alertEvs.length)h+=`<div style="color:#9ca3af;font-size:11px">없음</div>`;
+    h+=`</div></div>`;
+  }
+
+  // ===== EVENTS TAB =====
+  if(S.tab==="events"){
+    let evs=D.events.filter(e=>coMatch(e.l)).map(e=>{const cur=evT(e,lm),prev=evT(e,ms[S.P]);const op=getOpType(e.n);return{...e,cur,prev,dG:prev.d?(cur.d-prev.d)/prev.d*100:cur.d>0?null:0,op};});
+    if(S.opFilter!=="ALL")evs=evs.filter(e=>e.op===S.opFilter);
+    if(S.sort==="db")evs.sort((a,b)=>b.cur.d-a.cur.d);else if(S.sort==="cpa")evs.sort((a,b)=>(a.cur.cpa||9e9)-(b.cur.cpa||9e9));else if(S.sort==="growth")evs.sort((a,b)=>(b.dG||-999)-(a.dG||-999));
+    const allEvs=D.events.filter(e=>coMatch(e.l)).map(e=>({op:getOpType(e.n)}));
+    const sCount=allEvs.filter(e=>e.op==="S").length,nCount=allEvs.filter(e=>e.op==="N").length,uCount=allEvs.filter(e=>e.op==="?").length;
+    h+=`<div class="st2">이벤트별 성과</div><div class="sub2">카드 클릭 → 상세</div>`;
+    h+=`<div class="cf"><button class="cb ${S.opFilter==="ALL"?"a":""}" onclick="SS({opFilter:'ALL'})">전체 (${allEvs.length})</button><button class="cb ${S.opFilter==="N"?"a":""}" onclick="SS({opFilter:'N'})">💉 시술 (${nCount})</button><button class="cb ${S.opFilter==="S"?"a":""}" onclick="SS({opFilter:'S'})">🔪 수술 (${sCount})</button>${uCount?`<button class="cb ${S.opFilter==="?"?"a":""}" onclick="SS({opFilter:'?'})">❓ 미분류 (${uCount})</button>`:""}</div>`;
+    h+=`<div class="cf">${["db:DB순","growth:성장률순"].map(s=>{const[k,l]=s.split(":");return`<button class="cb ${S.sort===k?"a":""}" onclick="SS({sort:'${k}'})">${l}</button>`;}).join("")}</div>`;
+    evs.forEach((ev,ei)=>{
+      const isKR=ev.l==="KR",kw=findTagKw(ev.n),trText=autoTr(ev.n);
+      if(!kw)console.log('[NoMatch]',ev.n.slice(0,30),'tag:',!!D.tag,'tagKeys:',D.tag?Object.keys(D.tag).length:0);
+      const eid=btoa(unescape(encodeURIComponent(ev.n)));
+      h+=`<div class="ev" onclick="TE('${eid}')"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div>`;
+      h+=`<span class="fl fl-${ev.l}">${FL[ev.l]||""} ${ev.l}</span>`;
+      h+=`<span style="font-size:8px;padding:1px 5px;border-radius:3px;margin-right:3px;font-weight:600;${ev.op==="S"?"background:#fef2f2;color:#dc2626":"background:#ecfdf5;color:#059669"}">${ev.op==="S"?"🔪수술":"💉시술"}</span>`;
+      h+=`<span style="font-size:13px;font-weight:700">${esc(ev.n.length>38?ev.n.slice(0,38)+"…":ev.n)}</span>`;
+      if(!isKR&&trText&&S.showTr)h+=`<span style="font-size:10px;color:#6366f1;margin-left:6px">→ ${esc(trText)}</span>`;
+      h+=`</div>${S.showCPA?`<div style="text-align:right"><div style="font-size:17px;font-weight:800;color:#0891b2;font-family:'JetBrains Mono'">₩${fN(ev.cur.cpa)}</div><div style="font-size:8px;color:#9ca3af">DB당 투자비용</div></div>`:""}</div>`;
+      // Metrics with last month highlight
+      h+=`<div class="metrics">`;
+      l3.forEach((m,mi)=>{const t=evT(ev,m);const isLast=m===lm;
+        h+=`<div class="met ${isLast?"hl-met":""}"><div class="ml">${fM(m)}${isLast?" ★":""}</div><div class="mv">${fN(t.d)} <span style="font-size:8px;color:#9ca3af">DB</span></div><div style="font-size:8px;color:#9ca3af">조회 ${fN(t.v)} · ${fP(t.r)}</div></div>`;});
+      h+=`<div class="met"><div class="ml">DB성장</div><div class="mv">${ev.dG!==null?bg(ev.dG):"-"}</div></div>`;
+      // Market trend (KR only)
+      if(kw&&D.tag)h+=`<div class="met"><div class="ml">시장(${kw})</div><div class="mv">${mkSVG(kw)}</div></div>`;
+      h+=`</div>`;
+
+      // ===== EXPANDED DETAIL =====
+      if(S.exp.has(eid)){
+        h+=`<div class="DP"><div class="grid g2" style="margin-bottom:8px">
+        <div><div style="font-size:10px;color:#6b7280;font-weight:600;margin-bottom:4px">DB & 전환율 추이</div><div style="height:140px"><canvas id="dc_${ei}" data-eid="${eid}"></canvas></div></div>
+        <div><div style="font-size:10px;color:#6b7280;font-weight:600;margin-bottom:4px">월별 상세</div><div style="overflow-x:auto">
+        <table class="MT"><thead><tr><th>월</th><th>조회수</th><th>DB</th><th>전환율</th><th>비용</th></tr></thead><tbody>`;
+        ms.forEach(m=>{const t=evT(ev,m);const isL=m===lm;h+=`<tr><td${isL?' class="hl"':""}>${fM(m)}</td><td${isL?' class="hl"':""}>${fN(t.v)}</td><td${isL?' class="hl"':""}>${fN(t.d)}${t.cpcD>0?` <span style="font-size:9px;color:#6366f1">(CPC ${t.cpcD})</span>`:""}</td><td${isL?' class="hl"':""}>${fP(t.r)}</td><td${isL?' class="hl"':""}>₩${fN(t.c)}</td></tr>`;});
+        h+=`</tbody></table></div></div></div>`;
+        // Insight
+        if(kw&&D.tag&&D.tag[kw]){
+          const tr=D.tag[kw],ks=Object.keys(tr).sort().filter(k=>k<=S.lm).slice(-2);
+          const lastDM=D.months[D.months.length-1];
+          const vs=ks.map(k=>{let v=tr[k];if(S.proj&&k===lastDM&&isP(k,S.mktE))v=prj(v,S.mktE,k);return v;});
+          const g=vs[0]>0?(vs[1]-vs[0])/vs[0]*100:0;const evG=ev.dG||0;
+          let ins,ic;
+          if(g>0&&evG>0){ins="시장과 함께 성장 중!";ic="#059669";}
+          else if(g>0&&evG<=0){ins="⚠️ 시장은 성장, 우리 DB 감소";ic="#dc2626";}
+          else if(g<=0&&evG>0){ins="시장 축소에도 성장!";ic="#059669";}
+          else{ins="시장과 함께 감소";ic="#d97706";}
+          h+=`<div class="IB" style="border-left-color:${ic};color:${ic}">💡 시장(${kw}) ${fG(g)} vs 우리 ${fG(evG)} — ${ins}</div>`;
+        }
+        h+=`</div>`;
+      }
+      h+=`</div>`;
+    });
+  }
+
+  // ===== CPC TAB =====
+  if(S.tab==="cpc"){
+    const ct=cpcMT(lm,"ALL");
+    const ctP=cpcMT(ms[S.P],"ALL");
+    h+=`<div class="st2">CPC 검색광고</div><div class="grid ${S.showCPA?'g4':'g3'}"><div class="card"><div class="kl">${fM(lm)} 클릭수</div><div class="kv">${fN(ct.cl)}</div><div class="kf">${ctP.cl?bg((ct.cl-ctP.cl)/ctP.cl*100):""} 전월비</div></div><div class="card"><div class="kl">DB</div><div class="kv">${fN(ct.cn)}</div><div class="kf">${ctP.cn?bg((ct.cn-ctP.cn)/ctP.cn*100):""} 전월비</div></div><div class="card"><div class="kl">광고비</div><div class="kv">₩${fN(ct.tc)}</div></div>${S.showCPA?`<div class="card"><div class="kl">DB당 투자비용</div><div class="kv" style="color:#0891b2">₩${fN(ct.cpa)}</div><div class="kf">${ctP.cpa?bgInv((ct.cpa-ctP.cpa)/ctP.cpa*100):""} 전월비</div></div>`:""}</div>`;
+    // Charts
+    h+=`<div class="grid g2" style="margin-bottom:14px">
+    <div class="CC"><h3>📊 이벤트별 CPC 성과 (${fM(lm)})</h3><div class="CH"><canvas id="cpcBar"></canvas></div></div>
+    <div class="CC"><h3>📈 월별 CPC DB & 광고비 추이</h3><div class="CH"><canvas id="cpcTrend"></canvas></div></div></div>`;
+    h+=`<div class="CC" style="margin-bottom:14px"><h3>⚡ 월별 CTR & 전환율 변화</h3><div style="height:180px"><canvas id="cpcEff"></canvas></div></div>`;
+    // Per-event tables
+    Object.entries(D.cpc).forEach(([name,evC])=>{
+      const lang=dlang(name),tr=autoTr(name);
+      h+=`<div class="CC" style="margin-bottom:8px"><h3>🔍 <span class="fl fl-${lang}">${FL[lang]||""} ${lang}</span> ${esc(name.slice(0,45))}${lang!=="KR"&&tr&&S.showTr?` <span style="font-size:10px;color:#6366f1">→ ${esc(tr)}</span>`:""}</h3><table class="MT"><thead><tr><th>월</th><th>클릭</th><th>CTR</th><th>CPC</th><th>광고비</th><th>DB</th>${S.showCPA?`<th>DB당비용</th>`:""}</tr></thead><tbody>`;
+      ms.forEach(m=>{const x=evC[m];if(!x)return;const isL=m===lm;h+=`<tr><td${isL?' class="hl"':""}>${fM(m)}</td><td${isL?' class="hl"':""}>${fN(x[1])}</td><td${isL?' class="hl"':""}>${fP(x[2])}</td><td${isL?' class="hl"':""}>₩${fN(x[3])}</td><td${isL?' class="hl"':""}>₩${fN(x[4])}</td><td style="font-weight:700;color:#6366f1${isL?";background:#eef2ff":""}">${fN(x[5])}</td>${S.showCPA?`<td style="color:#0891b2;font-weight:700${isL?";background:#eef2ff":""}">₩${fN(x[5]>0?x[4]/x[5]:0)}</td>`:""}</tr>`;});
+      h+=`</tbody></table></div>`;});
+  }
+
+  // ===== MOM TAB =====
+  if(S.tab==="mom"){
+    // Slice months: up to baseMo, then take last N
+    const msUpToBase=ms.filter(m=>m<=S.lm);
+    const momMs=msUpToBase.slice(-S.momMonths);
+    const hlIdx=momMs.indexOf(S.lm);const mL=hlIdx>=0?hlIdx:momMs.length-1;const mP=mL-1;
+    const tots=momMs.map(m=>mTot(m,"ALL"));
+    const cpvTots=momMs.map(m=>cpvMTot(m,"ALL"));
+    const cpcTots=momMs.map(m=>cpcMT(m,"ALL"));
+    h+=`<div class="st2">MOM 변화 <span style="font-size:11px;color:#9ca3af;font-weight:400">최근 ${S.momMonths}개월</span></div>`;
+    function momT(title,rows,detailId,detailRows){
+      let t=`<div class="mom"><h4>${title}</h4><table class="MT"><thead><tr><th>구분</th>`;
+      momMs.forEach(m=>t+=`<th>${fM(m)}</th>`);t+=`<th>전월비</th></tr></thead><tbody>`;
+      rows.forEach(([lb,vals,fmt,inv])=>{t+=`<tr><td>${lb}</td>`;vals.forEach((v,i)=>t+=`<td${i===mL?' class="hl"':""}>${fmt(v)}</td>`);const l=vals[mL],p=vals[mP];t+=`<td>${p?(inv?bgInv:bg)((l-p)/p*100):""}</td></tr>`;});
+      if(detailId&&detailRows){
+        const isOpen=S.momDetail.has(detailId);
+        t+=`<tr><td colspan="${momMs.length+2}" style="padding:4px 8px;border:none"><span onclick="toggleMomDetail('${detailId}')" style="font-size:10px;color:#6366f1;cursor:pointer;user-select:none">${isOpen?"▼ 채널별 접기":"▶ CPV / CPC 분리 보기"}</span></td></tr>`;
+        if(isOpen){
+          detailRows.forEach(([lb,vals,fmt,inv])=>{t+=`<tr style="background:#f9fafb"><td style="padding-left:20px;font-size:10px;color:#6b7280">${lb}</td>`;vals.forEach((v,i)=>t+=`<td${i===mL?' class="hl"':""} style="font-size:10px;color:#6b7280">${fmt(v)}</td>`);const l=vals[mL],p=vals[mP];t+=`<td style="font-size:10px">${p?(inv?bgInv:bg)((l-p)/p*100):""}</td></tr>`;});
+        }
+      }
+      return t+`</tbody></table></div>`;
+    }
+    const baseRows=[];if(S.showOV)baseRows.push(["조회수",tots.map(t=>t.v),fN]);baseRows.push(["총 DB",tots.map(t=>t.d),fN]);baseRows.push(["전환율",tots.map(t=>t.r),fP]);
+    if(S.showCPA){baseRows.push(["총 광고비",tots.map(t=>t.c),v=>"₩"+fN(v)]);baseRows.push(["DB당 투자비용",tots.map(t=>t.cpa),v=>"₩"+fN(v),1]);}
+    const detailRows=S.showCPA?[["└ CPV DB당비용",cpvTots.map(t=>t.cpa),v=>"₩"+fN(v),1],["└ CPC DB당비용",cpcTots.map(t=>t.cpa),v=>v>0?"₩"+fN(v):"-",1],["└ CPV 광고비",cpvTots.map(t=>t.c),v=>"₩"+fN(v)],["└ CPC 광고비",cpcTots.map(t=>t.tc),v=>"₩"+fN(v)],["└ CPV DB",cpvTots.map(t=>t.d),fN],["└ CPC DB",cpcTots.map(t=>t.cn),fN]]:null;
+    h+=momT("📊 전체",baseRows,detailRows?"total":null,detailRows);
+    [...new Set(D.events.map(e=>e.l))].forEach(c=>{const cts=momMs.map(m=>mTot(m,c));if(cts.every(t=>t.d===0))return;
+      const cpvC=momMs.map(m=>cpvMTot(m,c));
+      const cpcC=momMs.map(m=>cpcMT(m,c));
+      const cRows=[];if(S.showOV)cRows.push(["조회수",cts.map(t=>t.v),fN]);cRows.push(["DB",cts.map(t=>t.d),fN]);cRows.push(["전환율",cts.map(t=>t.r),fP]);
+      if(S.showCPA){cRows.push(["광고비",cts.map(t=>t.c),v=>"₩"+fN(v)]);cRows.push(["DB당비용",cts.map(t=>t.cpa),v=>"₩"+fN(v),1]);}
+      const cDetail=S.showCPA?[["└ CPV DB당비용",cpvC.map(t=>t.cpa),v=>"₩"+fN(v),1],["└ CPC DB당비용",cpcC.map(t=>t.cpa),v=>v>0?"₩"+fN(v):"-",1],["└ CPV 광고비",cpvC.map(t=>t.c),v=>"₩"+fN(v)],["└ CPC 광고비",cpcC.map(t=>t.tc),v=>"₩"+fN(v)],["└ CPV DB",cpvC.map(t=>t.d),fN],["└ CPC DB",cpcC.map(t=>t.cn),fN]]:null;
+      h+=momT(`${CL[c]||c}`,cRows,cDetail?"country_"+c:null,cDetail);});
+    h+=`<div class="st2">이벤트별 MOM (상위 10)</div>`;
+    D.events.slice().sort((a,b)=>momMs.reduce((s,m)=>(b.m[m]?b.m[m][1]:0)+s,0)-momMs.reduce((s,m)=>(a.m[m]?a.m[m][1]:0)+s,0)).slice(0,10).forEach((ev,i)=>{
+      const ets=momMs.map(m=>evT(ev,m)),tr=autoTr(ev.n);
+      const cpvEts=momMs.map(m=>evCPV(ev,m)),cpcEts=momMs.map(m=>evCPC(ev.n,m));
+      let title=`<span class="fl fl-${ev.l}">${FL[ev.l]||""}</span> ${esc(ev.n.slice(0,40))}`;
+      if(ev.l!=="KR"&&tr&&S.showTr)title+=` <span style="font-size:10px;color:#6366f1">(${esc(tr)})</span>`;
+      const evRows=[];if(S.showOV)evRows.push(["조회수",ets.map(t=>t.v),fN]);evRows.push(["DB",ets.map(t=>t.d),fN]);evRows.push(["전환율",ets.map(t=>t.r),fP]);
+      if(S.showCPA){evRows.push(["광고비",ets.map(t=>t.c),v=>"₩"+fN(v)]);evRows.push(["DB당비용",ets.map(t=>t.cpa),v=>"₩"+fN(v),1]);}
+      const evDetail=S.showCPA?[["└ CPV DB당비용",cpvEts.map(t=>t.d>0?t.c/t.d:0),v=>v>0?"₩"+fN(v):"-",1],["└ CPC DB당비용",cpcEts.map(t=>t.cn>0?t.tc/t.cn:0),v=>v>0?"₩"+fN(v):"-",1]]:null;
+      h+=momT(title,evRows,evDetail?"ev_"+i:null,evDetail);});
+  }
+
+  h+=`<div class="footer"><p>DB=CPV전환+CPC전환 · DB당투자비용=(CPV비용+CPC비용)÷총DB · 💾 자동 저장</p></div>`;
+  document.getElementById("app").innerHTML=h;
+  document.getElementById("pt")?.addEventListener("change",e=>{S.proj=e.target.checked;R();});
+  document.getElementById("ce")?.addEventListener("change",e=>{S.cpvE=Math.max(1,+e.target.value);R();});
+  document.getElementById("me")?.addEventListener("change",e=>{S.mktE=Math.max(1,+e.target.value);R();});
+  document.getElementById("trToggle")?.addEventListener("change",e=>{S.showTr=e.target.checked;R();});
+  document.getElementById("momM")?.addEventListener("change",e=>{S.momMonths=Math.max(2,Math.min(S.ms.length,+e.target.value));R();});
+  setTimeout(rCh,80);
+}
+
+function rCh(){
+  Object.values(S.ch).forEach(c=>{try{c.destroy();}catch(e){}});S.ch={};if(!D)return;
+  const co=S.co,ms=S.ms,lm=S.lm;
+  const sty={grid:{color:"#f3f4f6"},tick:{color:"#9ca3af",font:{size:9,family:"'JetBrains Mono'"}},tt:{backgroundColor:"#1f2937",borderColor:"#374151",borderWidth:1,titleColor:"#9ca3af",bodyColor:"#f9fafb",padding:7,cornerRadius:5}};
+  const lbs=ms.map(fM);
+  const c1=document.getElementById("c1");
+  if(c1){const tots=ms.map(m=>mTot(m,co));
+    const dlPlugin={id:'dlp',afterDatasetsDraw(chart){const ctx=chart.ctx;
+      // Find the DB dataset by label
+      const dsIdx=chart.data.datasets.findIndex(ds=>ds.label==="DB");if(dsIdx<0)return;
+      const meta=chart.getDatasetMeta(dsIdx);if(!meta)return;
+      meta.data.forEach((bar,i)=>{const v=chart.data.datasets[dsIdx].data[i];if(!v)return;ctx.save();ctx.font="bold 10px 'JetBrains Mono'";ctx.fillStyle="#0891b2";ctx.textAlign="center";ctx.fillText(fN(v),bar.x,bar.y-6);ctx.restore();});}};
+    const datasets=[];
+    if(S.showOV)datasets.push({label:"조회수",data:tots.map(t=>t.v),backgroundColor:"rgba(99,102,241,.2)",borderColor:"#6366f1",borderWidth:1,borderRadius:4,yAxisID:"y"});
+    datasets.push({label:"DB",data:tots.map(t=>t.d),backgroundColor:"rgba(8,145,178,.25)",borderColor:"#0891b2",borderWidth:1,borderRadius:4,yAxisID:S.showOV?"y1":"y"});
+    const scales={x:{grid:{display:false},ticks:{color:"#6b7280",font:{size:10}}}};
+    if(S.showOV){scales.y={position:"left",grid:sty.grid,ticks:{...sty.tick,callback:v=>fN(v)}};scales.y1={position:"right",grid:{drawOnChartArea:false},ticks:{...sty.tick,callback:v=>fN(v)}};}
+    else{scales.y={position:"left",grid:sty.grid,ticks:{...sty.tick,callback:v=>fN(v)}};}
+    S.ch.c1=new Chart(c1.getContext("2d"),{type:"bar",plugins:[dlPlugin],data:{labels:lbs,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{color:"#6b7280",font:{size:9},boxWidth:8}},tooltip:sty.tt},scales}});}
+  const c2=document.getElementById("c2");
+  if(c2){const tots=ms.map(m=>mTot(m,co)),cpas=tots.map(t=>t.cpa).filter(v=>v>0);const mn=cpas.length?Math.min(...cpas)*.85:0,mx=cpas.length?Math.max(...cpas)*1.1:1;
+    S.ch.c2=new Chart(c2.getContext("2d"),{type:"line",data:{labels:lbs,datasets:[{label:"DB당 투자비용",data:tots.map(t=>t.cpa),borderColor:"#0891b2",backgroundColor:"rgba(8,145,178,.06)",borderWidth:3,pointRadius:5,pointBackgroundColor:"#0891b2",pointBorderColor:"#fff",pointBorderWidth:2,fill:true,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...sty.tt,callbacks:{label:c=>"₩"+fN(c.parsed.y)}}},scales:{x:{grid:{display:false},ticks:{color:"#6b7280",font:{size:10}}},y:{grid:sty.grid,ticks:{...sty.tick,callback:v=>"₩"+fN(v)},min:Math.floor(mn/1000)*1000,max:Math.ceil(mx/1000)*1000}}}});}
+  // Country pie chart with % labels inside
+  const cPie=document.getElementById("cPie");
+  if(cPie){
+    const PIE_COLORS={"KR":"#6366f1","JP":"#f59e0b","EN":"#10b981","TW":"#ec4899","TH":"#f97316","CN":"#ef4444"};
+    const countries=[...new Set(D.events.map(e=>e.l))];
+    const countryDB=countries.map(c=>{let d=0;D.events.forEach(ev=>{if(ev.l===c)d+=evT(ev,lm).d;});return{c,d};}).filter(x=>x.d>0).sort((a,b)=>b.d-a.d);
+    const totalDB=countryDB.reduce((s,x)=>s+x.d,0);
+    // Plugin to draw % labels inside slices
+    const labelPlugin={id:'doughnutLabels',afterDraw(chart){const ctx=chart.ctx;ctx.save();ctx.font="bold 11px 'JetBrains Mono'";ctx.textAlign='center';ctx.textBaseline='middle';
+      chart.data.datasets[0].data.forEach((val,i)=>{const meta=chart.getDatasetMeta(0).data[i];if(!meta)return;
+        const pct=(val/totalDB*100);if(pct<3)return; // skip tiny slices
+        const{x,y}=meta.tooltipPosition();ctx.fillStyle='#fff';ctx.fillText(pct.toFixed(0)+'%',x,y);});ctx.restore();}};
+    S.ch.cPie=new Chart(cPie.getContext("2d"),{type:"doughnut",data:{
+      labels:countryDB.map(x=>(CL[x.c]||x.c)),
+      datasets:[{data:countryDB.map(x=>x.d),backgroundColor:countryDB.map(x=>(PIE_COLORS[x.c]||"#9ca3af")+"cc"),borderColor:"#fff",borderWidth:3}]
+    },plugins:[labelPlugin],options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{display:false},tooltip:{...sty.tt,callbacks:{label:c=>(CL[countryDB[c.dataIndex].c]||"")+": "+fN(c.raw)+"명 ("+(c.raw/totalDB*100).toFixed(1)+"%)"}}}}});
+  }
+  // CVR trend chart (when CPA is off)
+  const cCvr=document.getElementById("cCvr");
+  if(cCvr){
+    const tots=ms.map(m=>mTot(m,co));
+    const cvrDl={id:'cvrDl',afterDatasetsDraw(chart){const ctx=chart.ctx;const meta=chart.getDatasetMeta(0);meta.data.forEach((pt,i)=>{const v=chart.data.datasets[0].data[i];if(v==null)return;ctx.save();ctx.font="bold 10px 'JetBrains Mono'";ctx.fillStyle="#6366f1";ctx.textAlign="center";ctx.fillText(v.toFixed(1)+"%",pt.x,pt.y-8);ctx.restore();});}};
+    S.ch.cCvr=new Chart(cCvr.getContext("2d"),{type:"line",plugins:[cvrDl],data:{labels:lbs,datasets:[{label:"전환율",data:tots.map(t=>t.r*100),borderColor:"#6366f1",backgroundColor:"rgba(99,102,241,.08)",borderWidth:3,pointRadius:5,pointBackgroundColor:"#6366f1",pointBorderColor:"#fff",pointBorderWidth:2,fill:true,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...sty.tt,callbacks:{label:c=>c.parsed.y.toFixed(1)+"%"}}},scales:{x:{grid:{display:false},ticks:{color:"#6b7280",font:{size:10}}},y:{grid:sty.grid,ticks:{...sty.tick,callback:v=>v.toFixed(1)+"%"}}}}});
+  }  // Detail charts
+  if(S.exp.size>0&&S.tab==="events"){
+    // Find all expanded canvases by scanning DOM
+    document.querySelectorAll('canvas[id^="dc_"]').forEach(cv=>{
+      if(cv.dataset.rendered)return;
+      const ei=cv.id.replace("dc_","");
+      const eid=cv.dataset.eid;if(!eid)return;
+      const ev=D.events.find(e=>btoa(unescape(encodeURIComponent(e.n)))===eid);
+      if(!ev)return;
+      cv.dataset.rendered="1";
+      const dbs=ms.map(m=>evT(ev,m).d);
+      const cvrs=ms.map(m=>{const t=evT(ev,m);return t.v>0?(t.d/t.v*100):null;});
+      S.ch["d"+ei]=new Chart(cv.getContext("2d"),{type:"bar",data:{labels:lbs,datasets:[
+        {label:"DB",data:dbs,backgroundColor:"rgba(16,185,129,.2)",borderColor:"#059669",borderWidth:1,borderRadius:3,yAxisID:"y"},
+        {label:"전환율(%)",data:cvrs,type:"line",borderColor:"#6366f1",borderWidth:2,borderDash:[5,3],pointRadius:3,pointBackgroundColor:"#6366f1",yAxisID:"y1",tension:.3,spanGaps:true}
+      ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{color:"#6b7280",font:{size:8},boxWidth:6}},tooltip:{...sty.tt,callbacks:{label:c=>c.datasetIndex===0?fN(c.raw)+"건":c.raw?.toFixed(1)+"%"}}},scales:{
+        x:{grid:{display:false},ticks:{color:"#6b7280",font:{size:9}}},y:{position:"left",grid:sty.grid,ticks:{...sty.tick}},
+        y1:{position:"right",grid:{drawOnChartArea:false},ticks:{...sty.tick,callback:v=>v.toFixed(1)+"%"}}}}});
+    });
+  }
+  // CPC charts
+  const cpcBar=document.getElementById("cpcBar");
+  if(cpcBar){
+    const COLORS=["#6366f1","#06b6d4","#10b981","#f59e0b","#ec4899","#8b5cf6","#ef4444"];
+    const cpcEntries=Object.entries(D.cpc).map(([name,evC])=>{const x=evC[lm];const lang=dlang(name);const tr=lang!=="KR"?autoTr(name):"";return{name,db:x?x[5]:0,tc:x?x[4]:0,cpa:x&&x[5]>0?x[4]/x[5]:0,lang,tr};}).filter(e=>e.db>0).sort((a,b)=>b.db-a.db);
+    const labels=cpcEntries.map(e=>S.showTr&&e.tr?e.tr.slice(0,16):e.name.length>16?e.name.slice(0,16)+"…":e.name);
+    S.ch.cpcBar=new Chart(cpcBar.getContext("2d"),{type:"bar",data:{labels,datasets:[
+      {label:"DB",data:cpcEntries.map(e=>e.db),backgroundColor:cpcEntries.map((_,i)=>COLORS[i%COLORS.length]+"50"),borderColor:cpcEntries.map((_,i)=>COLORS[i%COLORS.length]),borderWidth:1,borderRadius:4,yAxisID:"y"},
+      {label:"DB당비용(₩만)",data:cpcEntries.map(e=>Math.round(e.cpa/10000*10)/10),type:"line",borderColor:"#ef4444",borderWidth:2,pointRadius:5,pointBackgroundColor:"#ef4444",pointBorderColor:"#fff",pointBorderWidth:2,yAxisID:"y1",tension:.3}
+    ]},options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{color:"#6b7280",font:{size:9},boxWidth:8}},tooltip:{...sty.tt,callbacks:{label:c=>c.datasetIndex===0?fN(c.raw)+"건":"₩"+fN(c.raw*10000)}}},scales:{
+      x:{position:"top",grid:sty.grid,ticks:sty.tick,title:{display:true,text:"DB",color:"#6366f1",font:{size:8}}},
+      y:{grid:{display:false},ticks:{color:"#374151",font:{size:10}}},
+      y1:{position:"bottom",grid:{drawOnChartArea:false},ticks:{...sty.tick,callback:v=>v+"만"},title:{display:true,text:"DB당비용",color:"#ef4444",font:{size:8}}}}}});
+  }
+  const cpcTrend=document.getElementById("cpcTrend");
+  if(cpcTrend){
+    const cpcByMonth=ms.map(m=>cpcMT(m,"ALL"));
+    S.ch.cpcTrend=new Chart(cpcTrend.getContext("2d"),{type:"bar",data:{labels:lbs,datasets:[
+      {label:"CPC DB",data:cpcByMonth.map(c=>c.cn),backgroundColor:"rgba(99,102,241,.3)",borderColor:"#6366f1",borderWidth:1,borderRadius:4,yAxisID:"y"},
+      {label:"CPC 광고비",data:cpcByMonth.map(c=>c.tc),type:"line",borderColor:"#ef4444",backgroundColor:"rgba(239,68,68,.06)",borderWidth:2.5,pointRadius:4,pointBackgroundColor:"#ef4444",pointBorderColor:"#fff",pointBorderWidth:2,fill:true,yAxisID:"y1",tension:.3}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{color:"#6b7280",font:{size:9},boxWidth:8}},tooltip:{...sty.tt,callbacks:{label:c=>c.datasetIndex===0?fN(c.raw)+"건":"₩"+fN(c.raw)}}},scales:{
+      x:{grid:{display:false},ticks:{color:"#6b7280",font:{size:10}}},
+      y:{position:"left",grid:sty.grid,ticks:sty.tick,title:{display:true,text:"DB",color:"#6366f1",font:{size:8}}},
+      y1:{position:"right",grid:{drawOnChartArea:false},ticks:{...sty.tick,callback:v=>"₩"+fN(v)},title:{display:true,text:"광고비",color:"#ef4444",font:{size:8}}}}}});
+  }
+  const cpcEff=document.getElementById("cpcEff");
+  if(cpcEff){
+    const COLORS=["#6366f1","#06b6d4","#10b981","#f59e0b","#ec4899"];
+    const cpcEntries=Object.entries(D.cpc).slice(0,5);
+    S.ch.cpcEff=new Chart(cpcEff.getContext("2d"),{type:"line",data:{labels:lbs,datasets:cpcEntries.map(([name,evC],i)=>{
+      const lang=dlang(name),tr=lang!=="KR"?autoTr(name):"";
+      const label=S.showTr&&tr?tr.slice(0,12):name.length>12?name.slice(0,12)+"…":name;
+      return{label,data:ms.map(m=>{const x=evC[m];return x&&x[0]>0?(x[5]/x[0]*100):null;}),borderColor:COLORS[i%COLORS.length],borderWidth:2.5,pointRadius:4,pointBackgroundColor:COLORS[i%COLORS.length],pointBorderColor:"#fff",pointBorderWidth:2,tension:.3,spanGaps:true};
+    })},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{color:"#6b7280",font:{size:9},boxWidth:8}},tooltip:{...sty.tt,callbacks:{label:c=>c.dataset.label+": "+c.parsed.y.toFixed(1)+"%"}}},scales:{
+      x:{grid:{display:false},ticks:{color:"#6b7280",font:{size:10}}},
+      y:{grid:sty.grid,ticks:{...sty.tick,callback:v=>v.toFixed(1)+"%"},title:{display:true,text:"전환율 (DB÷조회)",color:"#6b7280",font:{size:8}}}}}});
+  }
+}
+
+// ===== ACTIONS =====
+function SS(p){Object.assign(S,p);R();}
+function toggleCo(c){
+  if(c==="ALL"){S.co=new Set(["ALL"]);}
+  else{
+    S.co.delete("ALL");
+    if(S.co.has(c))S.co.delete(c);else S.co.add(c);
+    if(S.co.size===0)S.co=new Set(["ALL"]);
+  }
+  R();
+}
+function TE(n){if(S.exp.has(n))S.exp.delete(n);else S.exp.add(n);R();}
+function toggleMomDetail(id){if(S.momDetail.has(id))S.momDetail.delete(id);else S.momDetail.add(id);R();}
+function onFile(k,inp){if(inp.files[0]){S.files[k]=inp.files[0];R();}}
+function onTagUpload(inp){
+  if(!inp.files[0])return;
+  const fr=new FileReader();
+  fr.onload=function(e){
+    try{
+      const tagB=new Uint8Array(e.target.result);
+      const tW=XLSX.read(tagB,{type:"array"}),tS=tW.Sheets[tW.SheetNames[0]],tJ=XLSX.utils.sheet_to_json(tS);
+      const tagMap={};tJ.forEach(row=>{const kw=String(row['분석 단위']||'').trim();if(!kw)return;const td={};
+        Object.keys(row).filter(k=>k!=='분석 단위').forEach(col=>{const cm=col.match(/(\d{4})\.\s*(\d+)/);if(cm)td[cm[1]+"-"+cm[2].padStart(2,"0")]=Number(row[col])||0;});tagMap[kw]=td;});
+      D.tag=tagMap;
+      saveTag(tagMap);
+      isDirty=true;
+      R();
+    }catch(err){alert("태그 파일 파싱 오류: "+err);}
+  };
+  fr.readAsArrayBuffer(inp.files[0]);
+}
+
+// ===== AI 랭킹 코멘트 생성 =====
+// ===== 데이터 기반 자동 코멘트 생성 =====
+function makeTopComment(ev,allEvs){
+  const d=ev.cur.d,v=ev.cur.v,r=ev.cur.r,dG=ev.dG;
+  const cvr=(r*100).toFixed(1);
+  const avgD=allEvs.reduce((s,e)=>s+e.cur.d,0)/allEvs.length;
+  const avgR=allEvs.reduce((s,e)=>s+e.cur.r,0)/allEvs.length;
+  const parts=[];
+
+  // DB 절대량
+  if(d>=avgD*2) parts.push(`전체 평균 대비 ${(d/avgD).toFixed(1)}배 높은 DB ${d.toLocaleString()}건을 기록하며 최상위 성과를 유지하고 있습니다.`);
+  else parts.push(`DB ${d.toLocaleString()}건으로 상위권 성과를 안정적으로 유지하고 있습니다.`);
+
+  // 전환율
+  if(r>avgR*1.3) parts.push(`전환율 ${cvr}%로 평균보다 높아 콘텐츠-수요 매칭이 우수합니다.`);
+  else if(r<avgR*0.7) parts.push(`전환율 ${cvr}%는 개선 여지가 있어 썸네일·가격 강조 등 콘텐츠 보완을 권장합니다.`);
+
+  // 성장률
+  if(dG!==null){
+    if(dG>=20) parts.push(`전월 대비 +${dG.toFixed(1)}% 성장하며 상승 모멘텀이 뚜렷합니다.`);
+    else if(dG>=5) parts.push(`전월 대비 +${dG.toFixed(1)}% 소폭 성장 중입니다.`);
+    else if(dG<=-20) parts.push(`전월 대비 ${dG.toFixed(1)}% 감소 추세이므로 이벤트 구성 점검이 필요합니다.`);
+    else if(dG<0) parts.push(`전월 대비 ${dG.toFixed(1)}% 소폭 감소했으나 절대 DB량은 견조합니다.`);
+    else parts.push(`전월 대비 DB가 안정적으로 유지되고 있습니다.`);
+  }
+
+  return parts.slice(0,2).join(" ");
+}
+
+function makeBotComment(ev,allEvs){
+  const d=ev.cur.d,v=ev.cur.v,r=ev.cur.r,dG=ev.dG;
+  const cvr=(r*100).toFixed(1);
+  const avgR=allEvs.reduce((s,e)=>s+e.cur.r,0)/allEvs.length;
+  const parts=[];
+
+  // 조회수 vs DB 불균형 분석
+  if(v>500&&d<=2){
+    parts.push(`조회수 ${v.toLocaleString()}회에 비해 DB ${d}건으로 전환율이 매우 낮습니다. 가격·혜택 정보를 전면에 강조하거나 Before/After 콘텐츠를 보강해 전환 유도를 높여야 합니다.`);
+  } else if(d===0){
+    parts.push(`최신월 DB가 0건입니다. 이벤트 노출 여부 및 랜딩 페이지 상태를 우선 점검하고, 시즌 연관성이 낮다면 일시 중단 후 재기획을 고려하세요.`);
+  } else {
+    parts.push(`DB ${d.toLocaleString()}건으로 하위권에 해당합니다.`);
+    if(r<avgR*0.5) parts.push(`전환율 ${cvr}%가 평균의 절반 이하로, 이벤트 제목·썸네일·혜택 구성 전면 개편이 필요합니다.`);
+    else if(v<200) parts.push(`조회수 자체가 ${v.toLocaleString()}회로 낮아 노출 카테고리 및 키워드 재검토가 필요합니다.`);
+    else parts.push(`이벤트 내용 차별화 또는 가격 경쟁력 검토가 권장됩니다.`);
+  }
+
+  // 성장 추세
+  if(dG!==null&&dG<=-30) parts.push(`전월 대비 ${dG.toFixed(1)}% 급감하여 즉각적인 대응이 필요합니다.`);
+  else if(dG!==null&&dG>=10) parts.push(`다만 전월 대비 +${dG.toFixed(1)}% 개선 중이므로 현 방향을 유지하며 콘텐츠를 강화하면 효과적입니다.`);
+
+  return parts.slice(0,2).join(" ");
+}
+function goHome(){
+  if(isDirty){if(!confirm("저장하지 않은 데이터가 있습니다. 저장하시겠습니까?")){S.scr="home";S.files={cpv:null,cpc:null,tag:null};D=null;isDirty=false;R();return;}
+    saveCurrent().then(()=>{S.scr="home";S.files={cpv:null,cpc:null,tag:null};D=null;isDirty=false;R();});return;}
+  S.scr="home";S.files={cpv:null,cpc:null,tag:null};D=null;R();
+}
+async function saveCurrent(){
+  if(!D)return;
+  const newName=prompt("병원명을 확인/수정하세요:",D.hospital);
+  if(newName===null)return; // 취소
+  const trimmed=newName.trim();if(!trimmed)return;
+  // If name changed, delete old entry
+  if(trimmed!==D.hospital)await delH(D.hospital);
+  D.hospital=trimmed;S.hn=trimmed;
+  const ok=await saveH(trimmed,D);isDirty=false;S.statusMsg=ok?`✓ "${trimmed}" 저장 완료`:"저장 실패";S.statusType=ok?"ok":"err";R();
+}
+async function gen(){const btn=document.getElementById("gb");if(btn){btn.textContent="처리중…";btn.disabled=true;}
+  try{const data=await parseFiles();D=data;
+    // Save tag data separately as shared (so other hospitals can use it)
+    if(D.tag){saveTag(D.tag);}
+    // If no tag but shared exists, merge it
+    if(!D.tag){const sharedTag=loadTag();if(sharedTag)D.tag=sharedTag;}
+    isDirty=true;S.scr="dash";R();}
+  catch(e){S.statusMsg="오류: "+e;S.statusType="err";if(btn){btn.textContent="리포트 생성";btn.disabled=false;}R();}}
+async function loadSaved(n){const data=await loadH(n);if(data){D=data;
+  // Auto-merge shared tag if hospital has no tag data
+  if(!D.tag){const sharedTag=loadTag();if(sharedTag)D.tag=sharedTag;}
+  S.hn=n;isDirty=false;S.scr="dash";R();}else{S.statusMsg="로드 실패";S.statusType="err";R();}}
+async function delSaved(n){if(!confirm(`"${n}" 삭제?`))return;await delH(n);S.statusMsg=`"${n}" 삭제`;S.statusType="ok";R();}
+async function loadSampleData(){D=SAMPLE;S.hn="히트성형외과";isDirty=true;S.scr="dash";R();}
+function addTagFile(inp){
+  if(!inp.files[0])return;
+  const fr=new FileReader();
+  fr.onload=function(e){
+    const tagB=new Uint8Array(e.target.result);
+    const tW=XLSX.read(tagB,{type:"array"}),tS=tW.Sheets[tW.SheetNames[0]],tJ=XLSX.utils.sheet_to_json(tS);
+    const tagMap={};
+    tJ.forEach(row=>{const kw=String(row['분석 단위']||'').trim();if(!kw)return;const td={};
+      Object.keys(row).filter(k=>k!=='분석 단위').forEach(col=>{const cm=col.match(/(\d{4})\.\s*(\d+)/);if(cm)td[cm[1]+"-"+cm[2].padStart(2,"0")]=Number(row[col])||0;});tagMap[kw]=td;});
+    D.tag=tagMap;saveTag(tagMap);isDirty=true;
+    console.log('[addTagFile] Loaded',Object.keys(tagMap).length,'keywords');
+    R();
+  };
+  fr.readAsArrayBuffer(inp.files[0]);
+}
+function exportPDF(){
+  // Build event list for selection
+  const evsByDB=[...D.events].map(e=>({n:e.n,l:e.l,d:evT(e,S.lm).d})).filter(e=>e.d>0).sort((a,b)=>b.d-a.d);
+  let evOpts=evsByDB.slice(0,15).map((e,i)=>`<label style="display:flex;align-items:center;gap:8px;padding:6px 10px;cursor:pointer;border-bottom:1px solid #f9fafb"><input type="checkbox" name="sumEv" value="${i}" ${i<2?"checked":""} style="width:14px;height:14px;accent-color:#6366f1"><span style="font-size:11px"><span class="fl fl-${e.l}" style="font-size:7px">${FL[e.l]||""}</span>${esc(e.n.slice(0,35))} <span style="color:#9ca3af;font-size:9px">(${fN(e.d)} DB)</span></span></label>`).join("");
+  const modal=document.createElement('div');modal.id='pdfModal';
+  modal.innerHTML=`<div style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:flex;align-items:center;justify-content:center" onclick="if(event.target===this)this.remove()">
+  <div style="background:#fff;border-radius:16px;padding:24px 28px;width:420px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.15)">
+    <div style="font-size:16px;font-weight:800;margin-bottom:12px">📄 PDF 저장</div>
+    <div style="display:flex;gap:6px;margin-bottom:14px">
+      <button onclick="document.getElementById('pdfMode').value='summary';document.getElementById('summaryOpts').style.display='block';document.getElementById('fullOpts').style.display='none';this.style.background='#6366f1';this.style.color='#fff';this.nextElementSibling.style.background='#f9fafb';this.nextElementSibling.style.color='#6b7280'" style="flex:1;padding:8px;border-radius:8px;border:1px solid #6366f1;background:#6366f1;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR'">📋 한판요약</button>
+      <button onclick="document.getElementById('pdfMode').value='full';document.getElementById('summaryOpts').style.display='none';document.getElementById('fullOpts').style.display='block';this.style.background='#6366f1';this.style.color='#fff';this.previousElementSibling.style.background='#f9fafb';this.previousElementSibling.style.color='#6b7280'" style="flex:1;padding:8px;border-radius:8px;border:1px solid #e5e7eb;background:#f9fafb;color:#6b7280;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR'">📊 전체 리포트</button>
+    </div>
+    <input type="hidden" id="pdfMode" value="summary">
+    <div id="summaryOpts">
+      <div style="font-size:11px;color:#6b7280;margin-bottom:8px;font-weight:600">메인 이벤트 선택 (1~2개 권장)</div>
+      <div style="max-height:250px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px;margin-bottom:12px">${evOpts}</div>
+    </div>
+    <div id="fullOpts" style="display:none">
+      <div style="font-size:11px;color:#9ca3af;margin-bottom:8px">포함할 탭 선택</div>
+      ${["overview:종합 대시보드","events:이벤트별 성과","cpc:CPC 검색광고","mom:MOM 변화"].map(s=>{const[k,l]=s.split(":");return`<label style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#f9fafb;border-radius:8px;margin-bottom:6px;cursor:pointer;border:1px solid #e5e7eb"><input type="checkbox" name="fullTab" value="${k}" ${k==="overview"||k==="events"?"checked":""} style="width:16px;height:16px;accent-color:#6366f1"><span style="font-size:13px;font-weight:600">${l}</span></label>`;}).join("")}
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button onclick="doPDFExport()" style="flex:1;padding:10px;border-radius:10px;border:none;background:#6366f1;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR'">PDF 생성</button>
+      <button onclick="document.getElementById('pdfModal').remove()" style="padding:10px 16px;border-radius:10px;border:1px solid #e5e7eb;background:#fff;color:#6b7280;font-size:13px;cursor:pointer;font-family:'Noto Sans KR'">취소</button>
+    </div>
+  </div></div>`;
+  document.body.appendChild(modal);
+}
+function doPDFExport(){
+  const mode=document.getElementById('pdfMode').value;
+  document.getElementById('pdfModal').remove();
+  if(mode==='summary') return doSummaryPDF();
+  const checks=document.querySelectorAll('input[name=fullTab]:checked');
+  const tabs=[...checks].map(c=>c.value);if(!tabs.length)return;
+  const origTab=S.tab;const origExp=new Set(S.exp);
+  let printHTML=`<div style="font-family:'Noto Sans KR',sans-serif;max-width:1100px;margin:0 auto;padding:20px">`;
+  printHTML+=`<div style="margin-bottom:20px"><div style="font-size:10px;color:#6366f1;font-weight:700;letter-spacing:2px">PERFORMANCE REPORT</div><h1 style="font-size:24px;font-weight:900">${esc(D.hospital)}</h1><div style="font-size:11px;color:#9ca3af">${fM(S.ms[0])} ~ ${fM(S.lm)} · ${new Date().toLocaleDateString('ko-KR')}</div></div>`;
+  let idx=0;
+  function processTab(){
+    if(idx>=tabs.length){
+      printHTML+=`</div>`;
+      S.tab=origTab;S.exp=origExp;R();
+      openPrintWindow(printHTML);
+      return;
+    }
+    const tab=tabs[idx];
+    S.tab=tab;S.exp=new Set();rDash();
+    // Give charts time to render
+    setTimeout(()=>{
+      try{rCh();}catch(e){}
+      setTimeout(()=>{
+        // Convert canvases to images
+        document.querySelectorAll('#app canvas').forEach(cv=>{
+          try{const img=document.createElement('img');img.src=cv.toDataURL('image/png');img.style.cssText='width:100%;max-height:220px;object-fit:contain';cv.parentNode.replaceChild(img,cv);}catch(e){}
+        });
+        const content=document.getElementById('app').innerHTML;
+        const doc=(new DOMParser()).parseFromString(content,'text/html');
+        doc.querySelectorAll('.bbtn,.ctrl,.tabs,.cf,button,.footer,.tg').forEach(el=>el.remove());
+        const hdr=doc.querySelector('.hdr');if(hdr)hdr.remove();
+        printHTML+=`<div style="page-break-before:${idx>0?'always':'auto'};margin-bottom:20px">`;
+        printHTML+=`<h2 style="font-size:16px;font-weight:800;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #6366f1">${{overview:'종합 대시보드',events:'이벤트별 성과',cpc:'CPC 검색광고',mom:'MOM 변화'}[tab]}</h2>`;
+        printHTML+=doc.body.innerHTML;printHTML+=`</div>`;
+        idx++;processTab();
+      },200);
+    },100);
+  }
+  processTab();
+}
+function doSummaryPDF(){
+  const checks=document.querySelectorAll('input[name=sumEv]:checked');
+  const selIdxs=[...checks].map(c=>+c.value);
+  const evsByDB=[...D.events].map(e=>({...e,cur:evT(e,S.lm),prev:evT(e,S.ms[S.P])})).filter(e=>e.cur.d>0).sort((a,b)=>b.cur.d-a.cur.d);
+  const selEvs=selIdxs.map(i=>evsByDB[i]).filter(Boolean);
+  const ms=S.ms,lm=S.lm,co=S.co;
+  const cur=mTot(lm,co),prev=mTot(ms[S.P],co);
+  const gD=prev.d?(cur.d-prev.d)/prev.d*100:0;
+  const gCPA=prev.cpa?(cur.cpa-prev.cpa)/prev.cpa*100:0;
+  // MOM months
+  const momMs=ms.filter(m=>m<=lm).slice(-S.momMonths);
+  const momTots=momMs.map(m=>mTot(m,co));
+  const cpcTots=momMs.map(m=>cpcMT(m,co));
+  let h=`<div style="font-family:'Noto Sans KR',sans-serif;max-width:800px;margin:0 auto;padding:30px">`;
+  // Header
+  h+=`<div style="text-align:center;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #6366f1">
+  <div style="font-size:10px;color:#6366f1;font-weight:700;letter-spacing:3px;margin-bottom:4px">MONTHLY PERFORMANCE REPORT</div>
+  <h1 style="font-size:28px;font-weight:900;margin-bottom:4px">${esc(D.hospital)}</h1>
+  <div style="font-size:12px;color:#9ca3af">${fM(lm)} 성과 요약 · ${new Date().toLocaleDateString('ko-KR')}</div></div>`;
+  // KPI Cards
+  h+=`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px">
+  <div style="background:#f9fafb;border-radius:10px;padding:12px;text-align:center"><div style="font-size:9px;color:#6b7280;margin-bottom:2px">${fM(lm)} 조회수</div><div style="font-size:18px;font-weight:800;font-family:'JetBrains Mono'">${fN(cur.v)}</div></div>
+  <div style="background:#f9fafb;border-radius:10px;padding:12px;text-align:center"><div style="font-size:9px;color:#6b7280;margin-bottom:2px">총 DB</div><div style="font-size:18px;font-weight:800;font-family:'JetBrains Mono'">${fN(cur.d)}</div><div style="font-size:9px;margin-top:2px">${bg(gD)}</div></div>
+  <div style="background:#f9fafb;border-radius:10px;padding:12px;text-align:center"><div style="font-size:9px;color:#6b7280;margin-bottom:2px">전환율</div><div style="font-size:18px;font-weight:800;font-family:'JetBrains Mono'">${fP(cur.r)}</div></div>
+  <div style="background:#f9fafb;border-radius:10px;padding:12px;text-align:center"><div style="font-size:9px;color:#6b7280;margin-bottom:2px">DB당 투자비용</div><div style="font-size:18px;font-weight:800;font-family:'JetBrains Mono';color:#0891b2">₩${fN(cur.cpa)}</div><div style="font-size:9px;margin-top:2px">${bgInv(gCPA)}</div></div>
+  <div style="background:#f9fafb;border-radius:10px;padding:12px;text-align:center"><div style="font-size:9px;color:#6b7280;margin-bottom:2px">총 광고비</div><div style="font-size:18px;font-weight:800;font-family:'JetBrains Mono'">₩${fN(cur.c)}</div></div></div>`;
+  // Selected Main Events
+  if(selEvs.length){
+    h+=`<div style="font-size:14px;font-weight:800;margin-bottom:10px">📌 주요 이벤트</div>`;
+    selEvs.forEach(ev=>{
+      const dG=ev.prev.d?(ev.cur.d-ev.prev.d)/ev.prev.d*100:0;
+      h+=`<div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:700"><span style="font-size:8px;padding:1px 5px;border-radius:3px;background:#eef2ff;color:#6366f1;margin-right:4px">${ev.l}</span>${esc(ev.n.slice(0,40))}</div>
+        <div style="font-size:16px;font-weight:800;color:#0891b2;font-family:'JetBrains Mono'">₩${fN(ev.cur.cpa)} <span style="font-size:9px;color:#9ca3af">DB당비용</span></div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:11px">
+      <thead><tr style="border-bottom:1px solid #e5e7eb"><th style="text-align:left;padding:4px 6px;font-size:9px;color:#9ca3af;font-weight:600">월</th><th style="text-align:center;padding:4px 6px;font-size:9px;color:#9ca3af">조회수</th><th style="text-align:center;padding:4px 6px;font-size:9px;color:#9ca3af">DB</th><th style="text-align:center;padding:4px 6px;font-size:9px;color:#9ca3af">전환율</th><th style="text-align:right;padding:4px 6px;font-size:9px;color:#9ca3af">비용</th></tr></thead><tbody>`;
+      ms.slice(-4).forEach(m=>{const t=evT(ev,m);const isL=m===lm;
+        h+=`<tr style="${isL?'background:#eef2ff;font-weight:700':''}"><td style="padding:5px 6px;font-family:'Noto Sans KR';font-weight:600">${fM(m)}</td><td style="text-align:center;padding:5px 6px;font-family:'JetBrains Mono'">${fN(t.v)}</td><td style="text-align:center;padding:5px 6px;font-family:'JetBrains Mono'">${fN(t.d)}</td><td style="text-align:center;padding:5px 6px;font-family:'JetBrains Mono'">${fP(t.r)}</td><td style="text-align:right;padding:5px 6px;font-family:'JetBrains Mono'">₩${fN(t.c)}</td></tr>`;});
+      h+=`</tbody></table>
+      <div style="margin-top:6px;font-size:10px;color:#6b7280">DB 성장 ${bg(dG)}</div></div>`;
+    });
+  }
+  // MOM Summary
+  h+=`<div style="font-size:14px;font-weight:800;margin:16px 0 10px">📊 MOM 종합 (최근 ${momMs.length}개월)</div>`;
+  h+=`<table style="width:100%;border-collapse:collapse;font-size:11px"><thead><tr style="border-bottom:2px solid #6366f1"><th style="text-align:left;padding:6px;font-size:9px;color:#9ca3af">구분</th>`;
+  momMs.forEach(m=>h+=`<th style="text-align:center;padding:6px;font-size:9px;color:#9ca3af">${fM(m)}</th>`);
+  h+=`<th style="text-align:center;padding:6px;font-size:9px;color:#9ca3af">전월비</th></tr></thead><tbody>`;
+  const mL=momMs.length-1,mP=momMs.length-2;
+  [["조회수",momTots.map(t=>t.v),fN,0],["총 DB",momTots.map(t=>t.d),fN,0],["전환율",momTots.map(t=>t.r),fP,0],["총 광고비",momTots.map(t=>t.c),v=>"₩"+fN(v),0],["DB당 투자비용",momTots.map(t=>t.cpa),v=>"₩"+fN(v),1]].forEach(([lb,vals,fmt,inv])=>{
+    h+=`<tr style="border-bottom:1px solid #f3f4f6"><td style="padding:6px;font-weight:600;font-family:'Noto Sans KR'">${lb}</td>`;
+    vals.forEach((v,i)=>h+=`<td style="text-align:center;padding:6px;font-family:'JetBrains Mono'${i===mL?';background:#eef2ff;color:#4338ca;font-weight:700':''}">${fmt(v)}</td>`);
+    const l=vals[mL],p=vals[mP];h+=`<td style="text-align:center;padding:6px">${p?(inv?bgInv:bg)((l-p)/p*100):""}</td></tr>`;});
+  // CPC row if exists
+  if(cpcTots.some(c=>c.cn>0)){
+    h+=`<tr style="border-top:1px solid #e5e7eb"><td style="padding:6px;font-weight:600;color:#6b7280">CPC DB</td>`;
+    cpcTots.forEach((c,i)=>h+=`<td style="text-align:center;padding:6px;font-family:'JetBrains Mono';color:#6366f1${i===mL?';background:#eef2ff;font-weight:700':''}">${fN(c.cn)}</td>`);
+    const l=cpcTots[mL].cn,p=cpcTots[mP].cn;h+=`<td style="text-align:center;padding:6px">${p?bg((l-p)/p*100):""}</td></tr>`;
+  }
+  h+=`</tbody></table>`;
+  // Footer
+  h+=`<div style="margin-top:24px;padding-top:12px;border-top:1px solid #e5e7eb;text-align:center;font-size:9px;color:#9ca3af">
+  DB = CPV전환 + CPC전환 · DB당 투자비용 = (CPV비용+CPC비용) ÷ 총DB · 강남언니 성과 리포트</div></div>`;
+  openPrintWindow(h);
+}
+function openPrintWindow(html){
+  const pw=window.open('','_blank','width=900,height=800');
+  pw.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>*{margin:0;padding:0;box-sizing:border-box}body{background:#fff;color:#1a1d26;font-family:'Noto Sans KR',sans-serif;line-height:1.5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .B{display:inline-flex;align-items:center;gap:2px;padding:1px 5px;border-radius:10px;font-size:10px;font-weight:600;font-family:'JetBrains Mono',monospace}.B.u{background:#ecfdf5;color:#059669}.B.d{background:#fef2f2;color:#dc2626}.B.f{background:#fffbeb;color:#d97706}
+  .card,.CC,.ev,.mom{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:14px;margin-bottom:8px;break-inside:avoid}
+  .grid{display:grid;gap:10px;margin-bottom:14px}.g5{grid-template-columns:repeat(5,1fr)}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1fr 1fr}
+  .card .kl{font-size:10px;color:#6b7280;margin-bottom:3px}.card .kv{font-size:20px;font-weight:800;letter-spacing:-1px;font-family:'JetBrains Mono',monospace}.card .kf{display:flex;align-items:center;gap:3px;margin-top:2px;font-size:9px;color:#9ca3af}
+  .ev .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin-top:10px}.ev .met{padding:6px 8px;background:#f9fafb;border-radius:6px}.ev .met .ml{font-size:8px;color:#9ca3af}.ev .met .mv{font-size:13px;font-weight:700;font-family:'JetBrains Mono',monospace}.ev .met.hl-met{background:#eef2ff;border:1px solid #c7d2fe}
+  .fl{display:inline-block;font-size:8px;padding:1px 5px;border-radius:3px;font-weight:600;margin-right:3px}.fl-KR{background:#eef2ff;color:#6366f1}.fl-JP{background:#fef3c7;color:#92400e}.fl-TW{background:#fdf2f8;color:#db2777}.fl-EN{background:#ecfdf5;color:#059669}.fl-TH{background:#fffbeb;color:#d97706}.fl-CN{background:#fef2f2;color:#dc2626}
+  table.MT{width:100%;border-collapse:collapse}.MT th{padding:5px 8px;font-size:9px;font-weight:600;color:#9ca3af;text-align:center;border-bottom:1px solid #f3f4f6}.MT th:first-child{text-align:left}.MT td{padding:7px 8px;font-size:11px;text-align:center;font-family:'JetBrains Mono',monospace;color:#374151;border-bottom:1px solid #fafafa}.MT td:first-child{text-align:left;font-family:'Noto Sans KR';font-weight:600;color:#111827}.MT td.hl{background:#eef2ff;color:#4338ca;font-weight:700}
+  .st2{font-size:14px;font-weight:700;margin:18px 0 6px}img{max-width:100%}
+  @media print{body{margin:0}h2{page-break-after:avoid}.ev,.mom,.card{break-inside:avoid}}
+  </style></head><body>${html}
+  <script>setTimeout(()=>window.print(),500);<\/script></body></html>`);
+  pw.document.close();
+}
+// Share link helper
+function copyShareLink(){
+  if(!D)return;
+  const url=window.location.origin+window.location.pathname+'?hospital='+encodeURIComponent(D.hospital);
+  navigator.clipboard.writeText(url).then(()=>alert('링크 복사됨!\n'+url)).catch(()=>{prompt('이 링크를 복사하세요:',url);});
+}
+function showToast(msg,sub){
+  const d=document.createElement('div');d.innerHTML=`<div style="position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:1000;display:flex;align-items:center;justify-content:center" onclick="this.remove()"><div style="background:#fff;border-radius:14px;padding:24px 28px;width:340px;box-shadow:0 20px 60px rgba(0,0,0,.12)" onclick="event.stopPropagation()"><div style="font-size:15px;font-weight:700;margin-bottom:6px">${msg}</div>${sub?`<div style="font-size:12px;color:#6b7280;line-height:1.7">${sub}</div>`:""}<button onclick="this.closest('[style*=fixed]').remove()" style="margin-top:14px;width:100%;padding:10px;border-radius:10px;border:none;background:#6366f1;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Noto Sans KR'">확인</button></div></div>`;
+  document.body.appendChild(d);
+}
+async function exportJSON(){
+  if(!D)return;
+  const jsonStr=JSON.stringify(D);
+  const fileName=D.hospital+'_report.json';
+  if(window.showSaveFilePicker){
+    try{
+      const handle=await window.showSaveFilePicker({suggestedName:fileName,types:[{description:'JSON',accept:{'application/json':['.json']}}]});
+      const writable=await handle.createWritable();
+      await writable.write(jsonStr);await writable.close();
+      showToast('✓ 저장 완료','iCloud Drive를 사용하는 기기끼리 이 파일을 공유할 수 있습니다.');
+      return;
+    }catch(e){if(e.name==='AbortError')return;}
+  }
+  const blob=new Blob([jsonStr],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=fileName;a.click();URL.revokeObjectURL(a.href);
+  showToast('📦 내보내기 완료','iCloud Drive를 사용하는 기기끼리 이 파일을 공유할 수 있습니다.<br><br>① 다운로드된 파일을 iCloud Drive에 저장<br>② 다른 기기 홈화면 → "📦 JSON 가져오기"');
+}
+function importJSON(inp){
+  if(!inp.files[0])return;
+  const fr=new FileReader();
+  fr.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.hospital||!data.months||!data.events){alert('유효하지 않은 리포트 파일입니다.');return;}
+      D=data;S.hn=data.hospital;S.scr="dash";isDirty=true;
+      saveH(data.hospital,data);
+      R();
+    }catch(err){alert('파일 파싱 오류: '+err);}
+  };
+  fr.readAsText(inp.files[0]);
+}
+// URL param: ?hospital=병원명 → auto-load
+(async function(){
+  const params=new URLSearchParams(window.location.search);
+  const hospParam=params.get('hospital');
+  if(hospParam){
+    const data=await loadH(hospParam);
+    if(data){D=data;S.hn=hospParam;S.scr="dash";isDirty=false;}
+  }
+  R();
+})();
+</script></body></html>
